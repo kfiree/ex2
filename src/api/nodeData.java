@@ -1,48 +1,55 @@
 package api;
 
 public class nodeData implements node_data {
+    //TODO check deafult of var below
+    private int key;
+    private double weight;
+    private String info;
+    private int tag;
+    private geo_location location;
+
     @Override
     public int getKey() {
-        return 0;
+        return this.key;
     }
 
     @Override
     public geo_location getLocation() {
-        return null;
+        return this.location;
     }
 
     @Override
-    public void setLocation(geo_location p) {
-
+    public void setLocation(geo_location l) {
+        this.location = l;
     }
 
     @Override
     public double getWeight() {
-        return 0;
+        return this.weight;
     }
 
     @Override
     public void setWeight(double w) {
-
+        this.weight = w;
     }
 
     @Override
     public String getInfo() {
-        return null;
+        return this.info;
     }
 
     @Override
     public void setInfo(String s) {
-
+        this.info = s;
     }
 
     @Override
     public int getTag() {
-        return 0;
+        return this.tag;
     }
 
     @Override
     public void setTag(int t) {
-
+        this.tag = t;
     }
 }
