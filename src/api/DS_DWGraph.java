@@ -85,17 +85,17 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
     @Override
     public int nodeSize() {
-        return 0;
+        return nodes.size();
     }
 
     @Override
     public int edgeSize() {
-        return 0;
+        return edgeCounter;
     }
 
     @Override
     public int getMC() {
-        return 0;
+        return modeCounter;
     }
     private class edge implements edge_data{
         private int src, dest, tag;
