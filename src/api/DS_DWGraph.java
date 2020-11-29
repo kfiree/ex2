@@ -1,26 +1,33 @@
 package api;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 public class  DS_DWGraph implements  directed_weighted_graph{
+    private HashMap<Integer, node_data> nodes = new HashMap<>();
+    private HashMap<Integer, edge_data> edges = new HashMap<>();
+    private int modeCounter, edgeCounter;
+
     @Override
     public node_data getNode(int key) {
-        return null;
+        return nodes.get(key);
     }
 
     @Override
     public edge_data getEdge(int src, int dest) {
-        return null;
+        return edges.get(src);
     }
 
     @Override
-    public void addNode(node_data n) {
-
+    public void addNode(node_data node) {
+        if(node!=null)
+            nodes.put(node.getKey(), node);
     }
 
     @Override
     public void connect(int src, int dest, double w) {
-
+        edge_data newEdge = new edge(src, dest, w);
+        this.edges.put(src, newEdge);
     }
 
     @Override
@@ -57,10 +64,16 @@ public class  DS_DWGraph implements  directed_weighted_graph{
     public int getMC() {
         return 0;
     }
-    class edge implements edge_data{
+    private class edge implements edge_data{
         private int src, dest, tag;
         private double weight;
         private String info;
+
+        public edge(int src, int dest, double weight) {
+            this.src = src;
+            this.dest = dest;
+            this.weight=weight;
+        }
 
         @Override
         public int getSrc() {
