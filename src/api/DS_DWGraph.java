@@ -18,19 +18,25 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
     @Override
     public edge_data getEdge(int src, int dest) {
-        return edges.get(src);
+        return edges.get(src).get(dest);
     }
 
     @Override
     public void addNode(node_data node) {
-        if(node!=null)
+        if(node!=null) {
             nodes.put(node.getKey(), node);
+            edges.set(node.getKey(), new HashMap<>());
+
+            modeCounter++;
+        }
     }
 
     @Override
     public void connect(int src, int dest, double w) {
-        edge_data newEdge = new edge(src, dest, w);
-        this.edges.put(src, newEdge);
+        if(nodes.containsKey(src) && nodes.containsKey(dest)) {
+            edge_data newEdge = new edge(src, dest, w);
+            this.edges.get(src).put(dest, newEdge);
+        }
     }
 
     @Override
