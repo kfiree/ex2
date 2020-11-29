@@ -7,6 +7,7 @@ import java.util.HashMap;
 public class  DS_DWGraph implements  directed_weighted_graph{
     private HashMap<Integer, node_data> nodes = new HashMap<>();
     //TODO check for better mapping
+    //arraylist<hashmap<dest, edge>>, index = src
     private ArrayList<HashMap<Integer, edge_data>> edges = new ArrayList<>();
 //    private HashMap<Integer, edge_data> edges = new HashMap<>();
     private int modeCounter, edgeCounter;
@@ -23,6 +24,8 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
     @Override
     public void addNode(node_data node) {
+        //TODO check if edges.set is safe (what if key bigger then nodes
+        //TODO check edges.set if node exist
         if(node!=null) {
             nodes.put(node.getKey(), node);
             edges.set(node.getKey(), new HashMap<>());
@@ -36,6 +39,9 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         if(nodes.containsKey(src) && nodes.containsKey(dest)) {
             edge_data newEdge = new edge(src, dest, w);
             this.edges.get(src).put(dest, newEdge);
+
+            edgeCounter++;
+            modeCounter++;
         }
     }
 
@@ -46,16 +52,34 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
     @Override
     public Collection<edge_data> getE(int node_id) {
-        return null;
+        return edges.get(node_id).values();
     }
 
     @Override
     public node_data removeNode(int key) {
-        return null;
+        //TODO check if null check needed
+
+        HashMap<Integer, edge_data> neigh = edges.remove(key);
+        node_data removedNode = nodes.remove(key);
+
+        edgeCounter -= neigh.size();
+        modeCounter++;
+
+        return removedNode;
     }
 
     @Override
     public edge_data removeEdge(int src, int dest) {
+        if(nodes.containsKey(src)) {
+            edge_data removedEdge = edges.get(src).remove(dest);
+            //if there is an edge between src and dest
+            if(removedEdge!=null) {
+                modeCounter++;
+                edgeCounter--;
+
+                return removedEdge;
+            }
+        }
         return null;
     }
 
