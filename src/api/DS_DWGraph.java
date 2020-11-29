@@ -5,10 +5,12 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class  DS_DWGraph implements  directed_weighted_graph{
+    //TODO add equals overRide for tests
+
     private HashMap<Integer, node_data> nodes = new HashMap<>();
     //TODO check for better mapping
     //arraylist<hashmap<dest, edge>>, index = src
-    private ArrayList<HashMap<Integer, edge_data>> edges = new ArrayList<>();
+    private HashMap<Integer, HashMap<Integer, edge_data>> edges = new HashMap<>();
 //    private HashMap<Integer, edge_data> edges = new HashMap<>();
     private int modeCounter, edgeCounter;
 
@@ -28,7 +30,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         //TODO check edges.set if node exist
         if(node!=null) {
             nodes.put(node.getKey(), node);
-            edges.set(node.getKey(), new HashMap<>());
+            edges.put(node.getKey(), new HashMap<>());
 
             modeCounter++;
         }
@@ -36,6 +38,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
     @Override
     public void connect(int src, int dest, double w) {
+        //TODO split to 2 if for time save
         if(nodes.containsKey(src) && nodes.containsKey(dest)) {
             edge_data newEdge = new edge(src, dest, w);
             this.edges.get(src).put(dest, newEdge);
@@ -97,6 +100,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
     public int getMC() {
         return modeCounter;
     }
+
     private class edge implements edge_data{
         private int src, dest, tag;
         private double weight;

@@ -7,6 +7,12 @@ public class nodeData implements node_data {
     private String info;
     private int tag;
     private geo_location location;
+    static private int keyGenerator=0;
+
+    public nodeData() {
+        this.key=keyGenerator;
+        keyGenerator++;
+    }
 
     @Override
     public int getKey() {
