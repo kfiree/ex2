@@ -1,11 +1,14 @@
 package api;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 public class  DS_DWGraph implements  directed_weighted_graph{
     private HashMap<Integer, node_data> nodes = new HashMap<>();
-    private HashMap<Integer, edge_data> edges = new HashMap<>();
+    //TODO check for better mapping
+    private ArrayList<HashMap<Integer, edge_data>> edges = new ArrayList<>();
+//    private HashMap<Integer, edge_data> edges = new HashMap<>();
     private int modeCounter, edgeCounter;
 
     @Override
@@ -32,7 +35,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
     @Override
     public Collection<node_data> getV() {
-        return null;
+        return nodes.values();
     }
 
     @Override
