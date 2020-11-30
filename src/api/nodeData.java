@@ -9,9 +9,19 @@ public class nodeData implements node_data {
     private geo_location location;
     static private int keyGenerator=0;
 
+    //empty constructor
     public nodeData() {
         this.key=keyGenerator;
         keyGenerator++;
+    }
+
+    //copy constructor
+    public nodeData(node_data other) {
+        this.key = other.getKey();
+        this.tag = other.getTag();
+        this.info = other.getInfo();
+        this.weight = other.getWeight();
+        this.location = new geoLocation(other.getLocation());
     }
 
     @Override

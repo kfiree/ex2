@@ -3,16 +3,42 @@ package api;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class  DS_DWGraph implements  directed_weighted_graph{
-    //TODO add equals overRide for tests
 
+    //TODO add equals overRide for tests
+    //TODO check for better mapping for edges
     private HashMap<Integer, node_data> nodes = new HashMap<>();
-    //TODO check for better mapping
-    //arraylist<hashmap<dest, edge>>, index = src
-    private HashMap<Integer, HashMap<Integer, edge_data>> edges = new HashMap<>();
-//    private HashMap<Integer, edge_data> edges = new HashMap<>();
+    private HashMap<Integer, HashMap<Integer, edge_data>> edges = new HashMap<>(); //edges<src,<dest, edge>>
     private int modeCounter, edgeCounter;
+
+    //empty constructor
+    public DS_DWGraph() {}
+
+    //copy constructor
+    public DS_DWGraph(directed_weighted_graph other) {
+        //set graph's nodes
+        Collection<node_data> oNodes = other.getV();
+        if (oNodes != null) {
+            for (node_data node : oNodes) {
+                addNode(new nodeData(node));
+            }
+        }
+
+        //TODO check if iterator better then for each
+        for (int nodeKey : edges.keySet()) {
+            Collection<edge_data> nodeNei = other.getE(nodeKey);
+            Iterator<edge_data> iterator = nodeNei.iterator();
+            while (iterator.hasNext()) {
+                edge_data edge = iterator.next();
+                connect(nodeKey, edge.getDest(), edge.getWeight());
+            }
+        }
+        //set counters
+        this.modeCounter = other.getMC();
+        this.edgeCounter = other.edgeSize();
+    }
 
     @Override
     public node_data getNode(int key) {
@@ -105,6 +131,18 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         private int src, dest, tag;
         private double weight;
         private String info;
+
+        //empty constructor
+        public edge() {}
+
+        //copy constructor
+        public edge(edge_data other) {
+            this.src = other.getSrc();
+            this.dest = other.getDest();
+            this.weight = other.getWeight();
+            this.info = other.getInfo();
+            this.tag = other.getTag();
+        }
 
         public edge(int src, int dest, double weight) {
             this.src = src;
