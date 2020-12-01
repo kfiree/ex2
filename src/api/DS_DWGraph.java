@@ -65,10 +65,12 @@ public class  DS_DWGraph implements  directed_weighted_graph{
     @Override
     public void connect(int src, int dest, double w) {
         //TODO split to 2 if for time save
-        if(nodes.containsKey(src) && nodes.containsKey(dest)) {
+        if(nodes.get(src)!=null && nodes.get(dest)!=null){
+            //add new edge to edges
             edge_data newEdge = new edge(src, dest, w);
             this.edges.get(src).put(dest, newEdge);
 
+            //manage counters
             edgeCounter++;
             modeCounter++;
         }
@@ -99,10 +101,11 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
     @Override
     public edge_data removeEdge(int src, int dest) {
-        if(nodes.containsKey(src)) {
+
+        if(nodes.get(src)!=null){
             edge_data removedEdge = edges.get(src).remove(dest);
-            //if there is an edge between src and dest
-            if(removedEdge!=null) {
+
+            if(removedEdge!=null) { //if there is an edge between src and dest
                 modeCounter++;
                 edgeCounter--;
 

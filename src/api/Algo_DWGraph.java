@@ -157,8 +157,9 @@ public class Algo_DWGraph implements dw_graph_algorithms{
                 }
 
                 //if unvisited add to queue
-                if (unvisited.containsKey(next.getDest())) {
-                    nieQ.add(graph.getNode(next.getDest()));
+                int edgeDest = next.getDest();
+                if (unvisited.get(edgeDest)!=null) {
+                    nieQ.add(graph.getNode(edgeDest));
                 }
 
             }
