@@ -26,7 +26,8 @@ public class Algo_DWGraph implements dw_graph_algorithms{
         return new DS_DWGraph(this.graph);
     }
 
-    //TODO test isConnected, path's method
+    //TODO rewrite isConnected,
+    //TODO rewrite path's method
     @Override
     public boolean isConnected() {
         if(graph.nodeSize()<2){
