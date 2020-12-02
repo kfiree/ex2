@@ -65,14 +65,22 @@ public class  DS_DWGraph implements  directed_weighted_graph{
     @Override
     public void connect(int src, int dest, double w) {
         //TODO split to 2 if for time save
-        if(nodes.get(src)!=null && nodes.get(dest)!=null){
-            //add new edge to edges
-            edge_data newEdge = new edge(src, dest, w);
-            this.edges.get(src).put(dest, newEdge);
+        if( (nodes.get(src)!=null) && (nodes.get(dest)!=null) && (src!=dest) && (w>0) ){
 
-            //manage counters
-            edgeCounter++;
-            modeCounter++;
+            if (getEdge (src, dest) == null) {
+                //add new edge to edges
+                edge_data newEdge = new edge(src, dest, w);
+                this.edges.get(src).put(dest, newEdge);
+                //manage counters
+                edgeCounter++;
+                modeCounter++;
+            }
+            else if (getEdge (src, dest).getWeight() != w){
+                edge_data newEdge = new edge(src, dest, w);
+                this.edges.get(src).put(dest, newEdge);
+                modeCounter++;
+
+            }
         }
     }
 
