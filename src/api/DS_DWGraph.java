@@ -99,6 +99,10 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         return edgesFromNode.get(node_id).values();
     }
 
+    public Collection<edge_data> getOppositE (int node_id) {
+        return edgesToNode.get(node_id).values();
+    }
+
     @Override
     public node_data removeNode(int key) {
 
