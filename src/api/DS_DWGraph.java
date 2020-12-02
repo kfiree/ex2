@@ -47,6 +47,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
     @Override
     public edge_data getEdge(int src, int dest) {
+
         return edges.get(src).get(dest);
     }
 
@@ -67,6 +68,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         //TODO split to 2 if for time save
         if( (nodes.get(src)!=null) && (nodes.get(dest)!=null) && (src!=dest) && (w>0) ){
 
+            //if edge not already exist
             if (getEdge (src, dest) == null) {
                 //add new edge to edges
                 edge_data newEdge = new edge(src, dest, w);
@@ -75,6 +77,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
                 edgeCounter++;
                 modeCounter++;
             }
+            //if edge exist but w changes
             else if (getEdge (src, dest).getWeight() != w){
                 edge_data newEdge = new edge(src, dest, w);
                 this.edges.get(src).put(dest, newEdge);
@@ -156,9 +159,20 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         }
 
         public edge(int src, int dest, double weight) {
-            this.src = src;
-            this.dest = dest;
-            this.weight=weight;
+
+            if (weight >0) {
+                //edge from node to itself
+                if (src == dest){
+                    this.src = src;
+                    this.dest = dest;
+                    this.weight = 0;
+                }
+                else {
+                    this.src = src;
+                    this.dest = dest;
+                    this.weight = weight;
+                }
+            }
         }
 
         @Override
