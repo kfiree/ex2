@@ -124,6 +124,8 @@ public class Algo_DWGraph implements dw_graph_algorithms{
      * @param src start node
      * @param dest end (target) node
      */
+
+    //TODO change to kashir mamash
     private void setPathInfo(int src, int dest) {
 
         PriorityQueue<node_data> nieQ = new PriorityQueue<>();
