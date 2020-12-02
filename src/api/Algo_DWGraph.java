@@ -28,13 +28,14 @@ public class Algo_DWGraph implements dw_graph_algorithms {
 
     @Override
     public boolean isConnected() {
+
         if (this.graph.nodeSize() < 2) {
             return true;
         }
         if (!BFS()) {
             return false;
         }
-        return OppositeBFS((DS_DWGraph) graph);
+        return OppositeBFS((DS_DWGraph)this.graph);
     }
 
     private boolean BFS() {
