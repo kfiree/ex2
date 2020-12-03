@@ -1,6 +1,7 @@
 package api;
 
-public class nodeData implements node_data {
+
+public class nodeData implements node_data, Comparable {
     //TODO check deafult of var below
     private int key;
     private double weight;
@@ -67,5 +68,21 @@ public class nodeData implements node_data {
     @Override
     public void setTag(int t) {
         this.tag = t;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+
+        node_data node = (node_data) o;
+
+        if (getWeight() > node.getWeight()) {
+            return 1;
+        }
+        if (getWeight() < node.getWeight()) {
+            return -1;
+        }
+
+        return 0;
+
     }
 }
