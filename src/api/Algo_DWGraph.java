@@ -42,8 +42,7 @@ public class Algo_DWGraph implements dw_graph_algorithms {
         Queue<node_data> queue = new LinkedList<>();
         int visitedCounter = 0;
 
-        resetTagAndInfo(this.graph);
-
+        resetTagAndWeight(this.graph);
 
         Collection<node_data> G = this.graph.getV();
         Iterator<node_data> itr = G.iterator();
@@ -51,15 +50,15 @@ public class Algo_DWGraph implements dw_graph_algorithms {
             node_data src = itr.next();
             queue.add(src);
             visitedCounter++;
-            src.setInfo("1");
+            src.setTag(1);
 
             while (!queue.isEmpty()) {
                 Collection<edge_data> NA = graph.getE(src.getKey());
                 if (NA != null) {
                     for (edge_data edge : NA) {
                         node_data dst = graph.getNode(edge.getDest());
-                        if (dst.getInfo() == " ") {
-                            dst.setInfo("1");
+                        if (dst.getTag() == -1) {
+                            dst.setTag(1);
                             visitedCounter++;
                         }
                     }
@@ -75,7 +74,7 @@ public class Algo_DWGraph implements dw_graph_algorithms {
     private boolean OppositeBFS(DS_DWGraph g) {
         Queue<node_data> queue = new LinkedList<>();
         int visitedCounter = 0;
-        resetTagAndInfo(g);
+        resetTagAndWeight(g);
 
         Collection<node_data> G = g.getV();
         Iterator<node_data> itr = G.iterator();
@@ -83,15 +82,15 @@ public class Algo_DWGraph implements dw_graph_algorithms {
             node_data src = itr.next();
             queue.add(src);
             visitedCounter++;
-            src.setInfo("1");
+            src.setTag(1);
 
             while (!queue.isEmpty()) {
                 Collection<edge_data> NA = g.getOppositE(src.getKey());
                 if (NA != null) {
                     for (edge_data edge : NA) {
                         node_data dst = g.getNode(edge.getDest());
-                        if (dst.getInfo() == " ") {
-                            dst.setInfo("1");
+                        if (dst.getTag() == -1) {
+                            dst.setTag(1);
                             visitedCounter++;
                         }
                     }
@@ -100,67 +99,129 @@ public class Algo_DWGraph implements dw_graph_algorithms {
                 src = queue.peek();
             }
         }
-
         return visitedCounter==g.nodeSize();
-
     }
 
-    /////help function that reset all tags and info/////
-    private void resetTagAndInfo(directed_weighted_graph g) {
-        Collection<node_data> G = g.getV();
-        for (node_data n : G) {
-            n.setTag(0);
-            n.setInfo(" ");
-        }
-    }
+
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        //if no such path return -1
-        if (this.graph.getNode(src) == null || this.graph.getNode(dest) == null)
+
+        node_data start = this.graph.getNode(src);
+        node_data end = this.graph.getNode(dest);
+
+        if (end == null || start == null){
             return -1;
+        }
+        if (src == dest ){
+            return 0;
+        }
+        dijkstra(src, dest);
 
-        //set path info
-        setPathInfo(src, dest);
+        if (end.getWeight() != 0) {
+            return end.getWeight();
+        }
+        return -1;
 
-        //return path distance
-        return graph.getNode(dest).getWeight();
     }
 
     @Override
     public List<node_data> shortestPath(int src, int dest) {
 
-        //if node doesn't exists return null
-        if (this.graph.getNode(src) == null || this.graph.getNode(dest) == null)
+        node_data start = this.graph.getNode(src);
+        node_data end = this.graph.getNode(dest);
+
+        if (end == null || start == null){
             return null;
-
-        List<node_data> path = new ArrayList<>();
-
-        //if dest doesn't exist return null
-        node_data targetNode = graph.getNode(dest);
-        if (targetNode == null)
-            return null;
-
-        //set path info
-        setPathInfo(src, dest);
-
-        //if there is no path from ex1.src to dest return null
-        if (targetNode.getInfo() == null)
-            return null;
-
-        path.add(graph.getNode(dest));
-
-        //reconstruct path using nodes's info (represent previous)
-        node_data node = graph.getNode(dest);
-        while (node.getKey() != src && node.getInfo() != null) {
-            //get prev in path
-            int nextKey = Integer.parseInt(node.getInfo());
-            node = graph.getNode(nextKey);
-            path.add(node);
         }
-        Collections.reverse(path);
+        LinkedList <node_data> list = new LinkedList<>();
 
-        return path;
+        if (src == dest){
+            list.add(start);
+            return list;
+        }
+
+        dijkstra(src, dest);
+
+        if (end.getWeight() != 0) {
+            while (end.getTag() != end.getKey() ){
+                list.addFirst(end);
+                end = this.graph.getNode(end.getTag());
+            }
+            return list;
+        }
+        return null;
+    }
+
+
+    /**
+     * update node's data (weight and tag) using dijkstra's algorithm
+     * node's Weight = distance between node to source node
+     * node's tag = key of previous node in the shortest path to destination
+     *
+     * @param src  start node
+     * @param dest end (target) node
+     */
+
+    private void dijkstra (int src, int dest) {
+
+        node_data start = graph.getNode(src);
+        node_data end = graph.getNode(dest);
+
+        resetTagAndWeight(this.graph);
+
+        if ((start != null) && (end != null)) {
+
+            PriorityQueue<node_data> pQueue = new PriorityQueue<node_data>();
+            node_data nodeCurr;
+
+            pQueue.add(start);
+            start.setTag(src);
+
+            HashMap<edge_data, Integer> destEdges = new HashMap<>();
+            Collection<edge_data> E = graph.getE(dest);
+            for (edge_data e : E) {
+                destEdges.put(e, dest);
+            }
+
+            while ((!pQueue.isEmpty() && (!destEdges.isEmpty()))) {
+
+                nodeCurr = pQueue.poll();
+
+                Collection<edge_data> Edges = this.graph.getE(nodeCurr.getKey());
+                if (Edges != null) {
+                    for (edge_data edge : Edges) {
+                        node_data dst = this.graph.getNode(edge.getDest());
+                        if (nodeCurr.getTag() != dst.getKey()) {
+                            if (dst.getTag() == -1) {
+                                dst.setTag(nodeCurr.getKey());
+                                dst.setWeight(nodeCurr.getWeight() + edge.getWeight());
+                                pQueue.add(dst);
+                            }
+                            else if (dst.getWeight() > nodeCurr.getWeight()+edge.getWeight()){
+                                dst.setTag(nodeCurr.getKey());
+                                dst.setWeight(nodeCurr.getWeight()+edge.getWeight());
+                            }
+                        }
+                        if (destEdges.get(edge) != null) {
+                            destEdges.remove(edge);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * reset all Tag and Info by given graph
+     * @param g - directed_weighted_graph
+     */
+    private void resetTagAndWeight(directed_weighted_graph g) {
+        Collection<node_data> G = g.getV();
+        for (node_data n : G) {
+            n.setTag(-1);
+            n.setWeight(0);
+        }
     }
 
     @Override
@@ -173,57 +234,6 @@ public class Algo_DWGraph implements dw_graph_algorithms {
         return false;
     }
 
-    /**
-     * update all node's data (info and tag) using dijkstra's algorithm
-     * node's tag = distance between node to source node
-     * node's info = key of previous node in the shortest path to destination
-     *
-     * @param src  start node
-     * @param dest end (target) node
-     */
 
-    //TODO change to kashir mamash
-    private void setPathInfo(int src, int dest) {
 
-        PriorityQueue<node_data> nieQ = new PriorityQueue<>();
-        HashMap<Integer, node_data> unvisited = new HashMap<>();
-
-        //reset nodes data and add to unvisited
-        for (node_data node : graph.getV()) {
-            node.setTag(-1);
-            node.setInfo(null);
-            unvisited.put(node.getKey(), node);
-        }
-
-        //set first node data
-        graph.getNode(src).setTag(0);
-        nieQ.add(graph.getNode(src));
-        graph.getNode(src).setTag(0);
-
-        //iterate the nodes
-        while (!nieQ.isEmpty()) {
-            //get node with shortest path
-            node_data node = nieQ.poll();
-            double prevDist = node.getTag();
-
-            //TODO check if node's weight is used right
-            // update node's neighbours data
-            for (edge_data next : graph.getE(node.getKey())) {
-                //update new path is is shorter
-                double curDist = prevDist + next.getWeight();
-                if (next.getTag() == -1 || next.getTag() > curDist) {
-                    graph.getNode(next.getDest()).setWeight(curDist);
-                    next.setInfo(String.valueOf((node.getKey())));
-                }
-
-                //if unvisited add to queue
-                int edgeDest = next.getDest();
-                if (unvisited.get(edgeDest) != null) {
-                    nieQ.add(graph.getNode(edgeDest));
-                }
-
-            }
-            unvisited.remove(node.getKey());
-        }
-    }
 }
