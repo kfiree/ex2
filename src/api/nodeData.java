@@ -81,7 +81,6 @@ public class nodeData implements node_data, Comparable {
         if (getWeight() < node.getWeight()) {
             return -1;
         }
-
         return 0;
 
     }

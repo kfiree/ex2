@@ -59,6 +59,7 @@ public class Algo_DWGraph implements dw_graph_algorithms {
                         node_data dst = graph.getNode(edge.getDest());
                         if (dst.getTag() == -1) {
                             dst.setTag(1);
+                            queue.add(dst);
                             visitedCounter++;
                         }
                     }
@@ -91,6 +92,7 @@ public class Algo_DWGraph implements dw_graph_algorithms {
                         node_data dst = g.getNode(edge.getDest());
                         if (dst.getTag() == -1) {
                             dst.setTag(1);
+                            queue.add(dst);
                             visitedCounter++;
                         }
                     }
