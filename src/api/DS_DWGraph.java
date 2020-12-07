@@ -108,6 +108,12 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         return null;
     }
 
+    /**
+     * This method return collection representing all the edges getting in to
+     * the given node (all the edges ending (dest) at the given node).
+     * @param node_id
+     * @return
+     */
     public Collection<edge_data> getOppositE (int node_id) {
         if (nodes.get(node_id) != null) {
             return edgesToNode.get(node_id).values();
@@ -122,6 +128,8 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
         if (edgesToNode.get(key) != null) {
             modeCounter++; //if removedNode != null
+
+            //remove the edges that key is the dest
             Collection<Integer> removeNA = edgesToNode.get(key).keySet();
             if (removeNA != null) {
                 for (int src : removeNA) {
@@ -130,9 +138,9 @@ public class  DS_DWGraph implements  directed_weighted_graph{
                 }
             }
 
-            int size_edgesFromNode = edgesFromNode.remove(key).size();
+            int size_edgesFromNode = edgesFromNode.remove(key).size();  //remove the edges that key is the src
             int size_edgesToNode = removeNA.size();
-            int size = size_edgesFromNode + size_edgesToNode;
+            int size = size_edgesFromNode + size_edgesToNode; //num of edges key is dest+key is src
 
             modeCounter += size_edgesFromNode;
             edgeCounter -= size;
