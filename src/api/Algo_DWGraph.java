@@ -12,6 +12,7 @@ public class Algo_DWGraph implements dw_graph_algorithms {
             this.graph = new DS_DWGraph();
         else
             this.graph = g;
+
     }
 
     @Override

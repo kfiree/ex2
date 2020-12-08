@@ -6,6 +6,12 @@ public class geoLocation implements geo_location {
     //TODO check if private or public
     public double x,y,z;
 
+    //empty constructor
+    public geoLocation() {
+
+    }
+
+    //copy constructor
     public geoLocation(geo_location other) {
         this.x = other.x();
         this.y = other.y();
