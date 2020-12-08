@@ -23,6 +23,7 @@ public class nodeData implements node_data, Comparable {
         this.info = other.getInfo();
         this.weight = other.getWeight();
         this.location = new geoLocation(other.getLocation());
+
     }
 
     @Override
@@ -83,5 +84,12 @@ public class nodeData implements node_data, Comparable {
         }
         return 0;
 
+    }
+    public boolean equals(Object o) {
+        if (!(o instanceof node_data)) {
+            return false;
+        }
+        node_data node = (nodeData)o;
+        return this.key == node.getKey();
     }
 }

@@ -21,7 +21,6 @@ public class Algo_DWGraph implements dw_graph_algorithms {
 
     @Override
     public directed_weighted_graph copy() {
-
         return new DS_DWGraph(this.graph);
     }
 
@@ -203,6 +202,7 @@ public class Algo_DWGraph implements dw_graph_algorithms {
                 list.addFirst(end);
                 end = this.graph.getNode(end.getTag());
             }
+                list.addFirst(start);
             return list;
         }
         return null;
@@ -244,7 +244,12 @@ public class Algo_DWGraph implements dw_graph_algorithms {
             //if there is no edge- there is no path
             //if all edges are visited- we surly know the shortest path because using pQueue
             HashMap<edge_data, Integer> destEdges = new HashMap<>();
+            DS_DWGraph g = (DS_DWGraph)this.graph;
+            Collection<edge_data> OE = g.getOppositE(dest);
             Collection<edge_data> E = graph.getE(dest);
+            for (edge_data e : OE) {
+                destEdges.put(e, dest);
+            }
             for (edge_data e : E) {
                 destEdges.put(e, dest);
             }

@@ -137,9 +137,16 @@ public class  DS_DWGraph implements  directed_weighted_graph{
                     modeCounter++;
                 }
             }
+            //remove the edges that key is the src
+            Collection<Integer> removeONA = edgesFromNode.get(key).keySet();
+            if (removeONA != null) {
+                for (int src : removeNA) {
+                    edgesToNode.get(src).remove(key);
+                }
+            }
 
             int size_edgesFromNode = edgesFromNode.remove(key).size();  //remove the edges that key is the src
-            int size_edgesToNode = removeNA.size();
+            int size_edgesToNode = edgesToNode.remove(key).size();
             int size = size_edgesFromNode + size_edgesToNode; //num of edges key is dest+key is src
 
             modeCounter += size_edgesFromNode;
@@ -164,6 +171,23 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         }
         return null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        directed_weighted_graph g = (DS_DWGraph) o;
+        if(! (g.getV().containsAll(getV()))) {
+            return false;
+        }
+            for (node_data node :getV()){
+                if(!(g.getE(node.getKey()).containsAll(getE(node.getKey())))){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
 
     @Override
     public int nodeSize() {
@@ -224,7 +248,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
             if (!( o instanceof edge_data)){
                 return false;
             }
-            edge_data e = (edge_data) o;
+            edge_data e = (edge) o;
             return this.src== e.getSrc() && this.dest == e.getDest() && this.weight == e.getWeight();
         }
 
