@@ -47,52 +47,52 @@ public class  DS_DWGraph implements  directed_weighted_graph{
     }
 
     @Override
-    //TODO check if can do get on null (if src not in graph)
+
     public edge_data getEdge(int src, int dest) {
 
-        return edgesFromNode.get(src).get(dest);
+        if (nodes.get(src) != null) {
+
+            if (src == dest){
+              return new edge(src, dest, 0);
+            }
+            return edgesFromNode.get(src).get(dest);
+        }
+        return null;
     }
 
     @Override
     public void addNode(node_data node) {
         //TODO check if edges.set is safe (what if key bigger then nodes
         //TODO check edges.set if node exist
-        if(node!=null) {
+        if(node!=null && nodes.get(node.getKey()) == null) {
             nodes.put(node.getKey(), node);
             edgesFromNode.put(node.getKey(), new HashMap<>());
             edgesToNode.put(node.getKey(), new HashMap<>());
-
             modeCounter++;
+
         }
     }
 
     @Override
     public void connect(int src, int dest, double w) {
         //TODO split to 2 if for time save
-        if( (nodes.get(src)!=null) && (nodes.get(dest)!=null) && (w>0) ){
-
-
-            //if edge not already exist
-            if (getEdge (src, dest) == null) {
-                //add new edge to edges
-                edge_data newEdge = new edge(src, dest, w);
-                edge_data oppositNewEdge = new edge(dest, src, w);
-                this.edgesFromNode.get(src).put(dest, newEdge);
-                this.edgesToNode.get(dest).put(src, oppositNewEdge);
-                //manage counters
+        if( (nodes.get(src)!=null) && (nodes.get(dest)!=null) && (src != dest) && (w>=0) ) {
+            //if edge not exist
+            if (getEdge(src, dest) == null) {
                 edgeCounter++;
                 modeCounter++;
             }
             //if edge exist but w changes
-            else if (getEdge (src, dest).getWeight() != w){
-                edge_data newEdge = new edge(src, dest, w);
-                edge_data oppositNewEdge = new edge(dest, src, w);
-                this.edgesFromNode.get(src).put(dest, newEdge);
-                this.edgesToNode.get(dest).put(src, oppositNewEdge);
+            else if ((getEdge(src, dest).getWeight()) != w) {
                 modeCounter++;
-
             }
+            //add new edge to edges
+            edge_data newEdge = new edge(src, dest, w);
+            edge_data oppositNewEdge = new edge(dest, src, w);
+            this.edgesFromNode.get(src).put(dest, newEdge);
+            this.edgesToNode.get(dest).put(src, oppositNewEdge);
         }
+
     }
 
     @Override
@@ -187,6 +187,11 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
         //empty constructor
         public edge() {
+            this.src = 0;
+            this.dest = 0;
+            this.tag = 0;
+            this.weight = 0;
+            this.info = " ";
         }
 
         //copy constructor
@@ -213,6 +218,14 @@ public class  DS_DWGraph implements  directed_weighted_graph{
                     this.weight = weight;
                 }
             }
+        }
+        @Override
+        public boolean equals(Object o) {
+            if (!( o instanceof edge_data)){
+                return false;
+            }
+            edge_data e = (edge_data) o;
+            return this.src== e.getSrc() && this.dest == e.getDest() && this.weight == e.getWeight();
         }
 
         @Override
@@ -250,4 +263,5 @@ public class  DS_DWGraph implements  directed_weighted_graph{
             this.tag = t;
         }
     }
+
 }
