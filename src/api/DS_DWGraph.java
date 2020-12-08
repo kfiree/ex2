@@ -176,6 +176,12 @@ public class  DS_DWGraph implements  directed_weighted_graph{
     public boolean equals(Object o) {
 
         directed_weighted_graph g = (DS_DWGraph) o;
+
+        //TODO think if we should check modeCounter
+        if(g.nodeSize()!=this.nodeSize() || g.edgeSize()!=this.edgeSize()){
+            return false;
+        }
+
         if(! (g.getV().containsAll(getV()))) {
             return false;
         }

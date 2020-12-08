@@ -53,7 +53,6 @@ class Algo_DWGraphTest {
         assertEquals(g, g1);
     }
 
-    @Disabled
     @Test
     void copy() {
         ga.init(g);
