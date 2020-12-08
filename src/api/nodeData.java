@@ -7,7 +7,7 @@ public class nodeData implements node_data, Comparable {
     private double weight;
     private String info;
     private int tag;
-    private geo_location location;
+    private geo_location location = new geoLocation();
     private static int keyGenerator=0;
 
     //empty constructor

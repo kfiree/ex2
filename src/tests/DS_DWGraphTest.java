@@ -237,4 +237,19 @@ class DS_DWGraphTest {
         );
     }
 
+
+    public static void toString(directed_weighted_graph g){
+        String neiString;
+        int nodeSize= g.nodeSize();
+        for (node_data node : g.getV()) {
+            neiString = "[";
+            for(edge_data ni : g.getE(node.getKey())) {
+                neiString +=  ni.getDest() +"," ;
+            }
+
+            System.out.println("node := "+ node.getKey() + ", Nei := " +  neiString + "]");
+
+        }
+        System.out.println("###############################################################");
+    }
 }
