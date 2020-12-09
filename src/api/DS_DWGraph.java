@@ -1,16 +1,19 @@
 package api;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
+
+import com.google.gson.annotations.SerializedName;
 
 public class  DS_DWGraph implements  directed_weighted_graph{
 
     //TODO add equals overRide for tests
     //TODO check for better mapping for edges
+
+
     private HashMap<Integer, node_data> nodes = new HashMap<>();
     private HashMap<Integer, HashMap<Integer, edge_data>> edgesFromNode = new HashMap<>(); //edges<src,<dest, edges starting (source) >>
     private HashMap<Integer, HashMap<Integer, edge_data>> edgesToNode = new HashMap<>(); //edges<dest,<src, edges ending (dest)>>
+
 
     private int modeCounter, edgeCounter;
     //empty constructor
@@ -206,6 +209,19 @@ public class  DS_DWGraph implements  directed_weighted_graph{
     @Override
     public int getMC() {
         return modeCounter;
+    }
+
+    public Collection<node_data> getNodes (){
+        Collection<node_data> Nodes = getV();
+        return Nodes;
+    }
+    public Collection<edge_data> getEdges () {
+        Collection<edge_data> Edges = new HashSet<>();
+
+        for (node_data node : getV()) {
+         Edges.addAll(getE(node.getKey())) ;
+        }
+        return Edges;
     }
 
     private class edge implements edge_data{

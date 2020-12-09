@@ -1,8 +1,13 @@
 package api;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
+
 public class nodeData implements node_data, Comparable {
     //TODO check deafult of var below
+    @SerializedName("id")
     private int key;
     private double weight;
     private String info;

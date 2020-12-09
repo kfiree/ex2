@@ -181,10 +181,14 @@ class Algo_DWGraphTest {
     }
     @Disabled
     @Test
-    void save() {
-    }
-    @Disabled
-    @Test
-    void load() {
+    void saveAndLoad() {
+        ga.init(g);
+        ga.save("graphTest");
+
+        ga.init(null);
+        ga.load("graphTest");
+        assertEquals(1,1);
+
+
     }
 }

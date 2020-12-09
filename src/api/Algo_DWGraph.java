@@ -2,15 +2,14 @@ package api;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.*;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Algo_DWGraph implements dw_graph_algorithms {
-
 
     private directed_weighted_graph graph = new DS_DWGraph();
 
@@ -333,9 +332,26 @@ public class Algo_DWGraph implements dw_graph_algorithms {
 
     @Override
     public boolean load(String file) {
-        return false;
-    }
 
+        DS_DWGraph g = new DS_DWGraph();
+
+        try
+        {
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(g.getClass(), new DS_DWGraphJsonDeserializer() );
+            Gson gson = builder.create();
+
+
+            FileReader reader = new FileReader(file);
+            g = gson.fromJson(reader, g.getClass());
+
+        }
+        catch (FileNotFoundException e) {
+            return false;
+        }
+        this.graph =g;
+        return true;
+    }
 
 
 }
