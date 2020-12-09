@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Ex2_Client implements Runnable{
-	private static MyFrame _win;
+	private static window _win;
 	private static Arena _ar;
 	public static void main(String[] a) {
 		Thread client = new Thread(new Ex2_Client());
@@ -105,9 +105,10 @@ public class Ex2_Client implements Runnable{
 		_ar = new Arena();
 		_ar.setGraph(gg);
 		_ar.setPokemons(Arena.json2Pokemons(fs));
-		_win = new MyFrame("test Ex2");
+		_win = new window("test Ex2");
 		_win.setSize(1000, 700);
-		_win.update(_ar);
+		_win.panel.update(_ar);
+//		_win.gamePanel.update(_ar);
 
 
 		_win.show();
