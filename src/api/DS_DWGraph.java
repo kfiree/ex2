@@ -9,8 +9,9 @@ public class  DS_DWGraph implements  directed_weighted_graph{
     //TODO add equals overRide for tests
     //TODO check for better mapping for edges
 
-
+    @SerializedName("Nodes")
     private HashMap<Integer, node_data> nodes = new HashMap<>();
+    @SerializedName("Edges")
     private HashMap<Integer, HashMap<Integer, edge_data>> edgesFromNode = new HashMap<>(); //edges<src,<dest, edges starting (source) >>
     private HashMap<Integer, HashMap<Integer, edge_data>> edgesToNode = new HashMap<>(); //edges<dest,<src, edges ending (dest)>>
 
@@ -211,22 +212,11 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         return modeCounter;
     }
 
-    public Collection<node_data> getNodes (){
-        Collection<node_data> Nodes = getV();
-        return Nodes;
-    }
-    public Collection<edge_data> getEdges () {
-        Collection<edge_data> Edges = new HashSet<>();
 
-        for (node_data node : getV()) {
-         Edges.addAll(getE(node.getKey())) ;
-        }
-        return Edges;
-    }
 
     private class edge implements edge_data{
         private int src, dest, tag;
-        private double weight;
+        private double w;
         private String info;
 
         //empty constructor
@@ -234,7 +224,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
             this.src = 0;
             this.dest = 0;
             this.tag = 0;
-            this.weight = 0;
+            this.w = 0;
             this.info = " ";
         }
 
@@ -242,7 +232,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         public edge(edge_data other) {
             this.src = other.getSrc();
             this.dest = other.getDest();
-            this.weight = other.getWeight();
+            this.w = other.getWeight();
             this.info = other.getInfo();
             this.tag = other.getTag();
         }
@@ -254,12 +244,12 @@ public class  DS_DWGraph implements  directed_weighted_graph{
                 if (src == dest){
                     this.src = src;
                     this.dest = dest;
-                    this.weight = 0;
+                    this.w = 0;
                 }
                 else {
                     this.src = src;
                     this.dest = dest;
-                    this.weight = weight;
+                    this.w = weight;
                 }
             }
         }
@@ -269,7 +259,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
                 return false;
             }
             edge_data e = (edge) o;
-            return this.src== e.getSrc() && this.dest == e.getDest() && this.weight == e.getWeight();
+            return this.src== e.getSrc() && this.dest == e.getDest() && this.w == e.getWeight();
         }
 
         @Override
@@ -284,7 +274,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
         @Override
         public double getWeight() {
-            return this.weight;
+            return this.w;
         }
 
         @Override

@@ -12,6 +12,7 @@ public class nodeData implements node_data, Comparable {
     private double weight;
     private String info;
     private int tag;
+    @SerializedName("pos")
     private geo_location location = new geoLocation();
     private static int keyGenerator=0;
 
@@ -20,7 +21,9 @@ public class nodeData implements node_data, Comparable {
         this.key=keyGenerator;
         keyGenerator++;
     }
-
+    public nodeData(int key) {
+        this.key = key;
+    }
     //copy constructor
     public nodeData(node_data other) {
         this.key = other.getKey();
@@ -30,6 +33,7 @@ public class nodeData implements node_data, Comparable {
         this.location = new geoLocation(other.getLocation());
 
     }
+
 
     @Override
     public int getKey() {

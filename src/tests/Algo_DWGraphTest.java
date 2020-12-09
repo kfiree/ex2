@@ -183,10 +183,10 @@ class Algo_DWGraphTest {
     @Test
     void saveAndLoad() {
         ga.init(g);
-        ga.save("graphTest");
+        ga.save("gTest");
 
         ga.init(null);
-        ga.load("graphTest");
+        ga.load("gTest");
         assertEquals(1,1);
 
 
