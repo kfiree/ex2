@@ -21,11 +21,14 @@ public class DS_DWGraphJsonDeserializer implements JsonDeserializer<DS_DWGraph> 
             g.addNode(n);
         }
         for (Entry<String, JsonElement> setE : edgeJsonObj.entrySet()) {
-            JsonObject edge_dataObj = setE.getValue().getAsJsonObject();
-            int src = edge_dataObj.get("src").getAsInt();
-            int dest = edge_dataObj.get("dest").getAsInt();
-            double w = edge_dataObj.get("w").getAsDouble();
-            g.connect(src,dest,w);
+
+           for( Entry<String, JsonElement> innerEntry : setE.getValue().getAsJsonObject().entrySet()) {
+               JsonObject edge_data = innerEntry.getValue().getAsJsonObject();
+               int src = edge_data.get("src").getAsInt();
+               int dest = edge_data.get("dest").getAsInt();
+               double w = edge_data.get("w").getAsDouble();
+               g.connect(src, dest, w);
+           }
         }
         return g;
     }
