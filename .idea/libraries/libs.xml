@@ -9,6 +9,7 @@
       <root url="jar://$PROJECT_DIR$/libs/Ex2_Server_v0.13.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/kotlin-stdlib-common-1.3.70.jar!/" />
       <root url="file://$PROJECT_DIR$/../../../../../../Program Files/JFX/javafx-sdk-15.0.1/lib" />
+      <root url="jar://$PROJECT_DIR$/libs/gson-2.8.6.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

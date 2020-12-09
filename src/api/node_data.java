@@ -14,7 +14,7 @@ public interface node_data {
 	public int getKey();
 	/** Returns the location of this node, if
 	 * none return null.
-	 * 
+	 *
 	 * @return
 	 */
 	public geo_location getLocation();
@@ -48,7 +48,7 @@ public interface node_data {
 	 * @return
 	 */
 	public int getTag();
-	/** 
+	/**
 	 * Allows setting the "tag" value for temporal marking an node - common
 	 * practice for marking by algorithms.
 	 * @param t - the new value of the tag
