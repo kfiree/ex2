@@ -17,13 +17,11 @@ public class gamePanel extends JPanel {
     private int _ind;
     private Arena _ar;
     private gameClient.util.Range2Range _w2f;
-//    MyFrame(String a) {
-//        super(a);
-//        int _ind = 0;
-//    }
+
     gamePanel(){
 
     }
+
     public void update(Arena ar) {
         this._ar = ar;
         updateFrame();
@@ -40,7 +38,7 @@ public class gamePanel extends JPanel {
         int w = this.getWidth();
         int h = this.getHeight();
         g.clearRect(0, 0, w, h);
-        //	updateFrame();
+        updateFrame();
         drawPokemons(g);
         drawGraph(g);
         drawAgants(g);
