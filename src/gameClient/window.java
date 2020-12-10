@@ -1,6 +1,7 @@
 package gameClient;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class window extends JFrame{
     gamePanel panel;
@@ -8,15 +9,10 @@ public class window extends JFrame{
     public window(String a) {
         //set frame
         super(a);
+        this.setBackground( new Color(0x1F7F1F));
+        ImageIcon icon = new ImageIcon("icon.png");
+        this.setIconImage(icon.getImage());
         panel = new gamePanel();
         this.add(panel);
-//        this.setVisible(true); //make frame visible
-//        this.setTitle("Kfir&Tehila's Arena");   //set title of frame
-//        this.setSize(500, 500);      //set size
-//        this.setLocationRelativeTo(null);       //centering the frame
-//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//set exit program plane
-//        Panel gamePanel = new Panel();
-//        gamePanel.setBackground(Color.lightGray);
-//        this.setContentPane(gamePanel);
     }
 }

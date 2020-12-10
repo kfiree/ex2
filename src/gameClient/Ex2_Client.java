@@ -30,13 +30,24 @@ public class Ex2_Client implements Runnable{
 		String pks = game.getPokemons();
 		directed_weighted_graph gg = game.getJava_Graph_Not_to_be_used();
 		init(game);
-
+//        this.setVisible(true); //make frame visible
+//        this.setTitle();   //set title of frame
+//        this.setSize(500, 500);      //set size
+//        this.setLocationRelativeTo(null);       //centering the frame
+//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//set exit program plane
+//        Panel gamePanel = new Panel();
+//        gamePanel.setBackground(Color.lightGray);
+//        this.setContentPane(gamePanel);
 		game.startGame();
-		_win.setTitle("Ex2 - OOP: (NONE trivial Solution) "+game.toString());
+		_win.setTitle("Kfir&Tehila's Arena" + game.toString());
+//		ImageIcon icon = new ImageIcon("jangoIcon");
+//		_win.setIconImage(icon.getImage());
 		int ind=0;
 		long dt=100;
 
 		while(game.isRunning()) {
+//			icon = new ImageIcon("jangoIcon");
+//			_win.setIconImage(icon.getImage());
 			moveAgants(game, gg);
 			try {
 				if(ind%1==0) {_win.repaint();}
