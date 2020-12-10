@@ -36,7 +36,7 @@ public interface edge_data {
 	 * @return
 	 */
 	public int getTag();
-	/** 
+	/**
 	 * This method allows setting the "tag" value for temporal marking an edge - common
 	 * practice for marking by algorithms.
 	 * @param t - the new value of the tag
