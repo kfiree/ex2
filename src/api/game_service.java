@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author boaz.benmoshe
  *
  */
-public interface game_service extends Serializable{	
+public interface game_service extends Serializable{
 	/**
 	 * Returns a JSON representation of graph as a JSON String.
 	 * @return
@@ -35,18 +35,18 @@ public interface game_service extends Serializable{
 	 * @return
 	 */
 	public String getAgents();
-	/** 
+	/**
 	 * This method allows the user to add & locate the agents,
 	 * all should be located in order to start a game.   
-	 * 
+	 *
 	 * @param start_node - the vertex in the graph from which the agent will start.
 	 * @return
 	 */
 	public boolean addAgent(int start_node);
-		/**
-		 * Start a new game
-		 * @return the time (new Date().getTime()) if a new game was started, else -1.
-		 */
+	/**
+	 * Start a new game
+	 * @return the time (new Date().getTime()) if a new game was started, else -1.
+	 */
 	public long startGame();
 	/**
 	 * Returns the current status of the game (true: is running, false: NOT running).
@@ -68,7 +68,7 @@ public interface game_service extends Serializable{
 	public long chooseNextEdge(int id, int next_node);
 	/**
 	 * return the number of mili-seconds till the game is over
-	 * 
+	 *
 	 * @return
 	 */
 	public long timeToEnd();

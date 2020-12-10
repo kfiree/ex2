@@ -21,7 +21,6 @@ public class DS_DWGraphJsonDeserializer implements JsonDeserializer<DS_DWGraph> 
             g.addNode(n);
         }
         for (Entry<String, JsonElement> setE : edgeJsonObj.entrySet()) {
-
            for( Entry<String, JsonElement> innerEntry : setE.getValue().getAsJsonObject().entrySet()) {
                JsonObject edge_data = innerEntry.getValue().getAsJsonObject();
                int src = edge_data.get("src").getAsInt();

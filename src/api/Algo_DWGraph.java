@@ -341,10 +341,8 @@ public class Algo_DWGraph implements dw_graph_algorithms {
             builder.registerTypeAdapter(g.getClass(), new DS_DWGraphJsonDeserializer() );
             Gson gson = builder.create();
 
-
             FileReader reader = new FileReader(file);
             g = gson.fromJson(reader, g.getClass());
-
         }
         catch (FileNotFoundException e) {
             return false;
