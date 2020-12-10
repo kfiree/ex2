@@ -63,4 +63,5 @@ public class CL_Pokemon {
 	public void setMin_ro(int min_ro) {
 		this.min_ro = min_ro;
 	}
+
 }

@@ -1,4 +1,5 @@
 package gameClient;
+
 import api.directed_weighted_graph;
 import api.edge_data;
 import api.geo_location;
@@ -9,15 +10,15 @@ import gameClient.util.Range2D;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 
 public class gamePanel extends JPanel {
-    int totalValue = 0;
     private int _ind;
     private Arena _ar;
     private gameClient.util.Range2Range _w2f;
-    int barlocation = 0;
+    private boolean didThatalready = false, doneThat;
 
     gamePanel(){
     }
@@ -28,6 +29,7 @@ public class gamePanel extends JPanel {
     }
 
     private void updateFrame() {
+
         double i = 0.0;
         Range rx = new Range(20,this.getWidth()-20);
         Range ry = new Range(this.getHeight()-10,150);
@@ -41,7 +43,8 @@ public class gamePanel extends JPanel {
         int w = this.getWidth();
         int h = this.getHeight();
 //        g.clearRect(0, 0, w, h);
-        g.setFont(new Font("MV Boli", Font.BOLD,20));
+        g.setFont(new Font("MV Boli", Font.BOLD,15));
+
         updateFrame();
 
         drawGraph(g);
@@ -59,22 +62,28 @@ public class gamePanel extends JPanel {
 //
 //    }
 
-    private void drawProgressBar(Graphics g, CL_Agent agent) {
-        JProgressBar bar = new JProgressBar();
-        bar=new JProgressBar();
+    private void drawProgressBarAndTitle(Graphics g){
+        int currValue=0;
+        for(CL_Agent a: _ar.getAgents()){
+            currValue+= a.getValue();
+        }
+        int totalValue = currValue;
+        for(CL_Pokemon p: _ar.getPokemons()){
+            totalValue += p.getValue();
+        }
+        ImageIcon headline = new ImageIcon("arena.png");
+        g.drawImage(headline.getImage(), (this.getWidth()/2)-200, 10, 400, 45, this);
+        JProgressBar bar = new JProgressBar(0,totalValue);
         bar.setValue(0);
-        bar.setBounds(0, agent.getID()*15 ,1000,15);
-        bar.setMinimum(0);
-        bar.setMaximum(totalValue);
+        bar.setBounds(0, 80 ,this.getWidth(),50);
+        bar.setStringPainted(true);
         bar.setBackground(Color.black);
         bar.setForeground(Color.red);
-
         this.add(bar);
         g.setColor(Color.white);
-        bar.setString("agent " + agent.getID() + " caught " + agent.getValue() + " pokemons");
-        bar.setValue((int)agent.getValue());
+        bar.setString("Value of " + currValue + "Pokemons have been captured out of " + totalValue);
+        bar.setValue(currValue);
         this.add(bar);
-        barlocation++;
     }
 
     private void drawGraph(Graphics g) {
@@ -94,25 +103,37 @@ public class gamePanel extends JPanel {
     }
     private void drawPokemons(Graphics g) {
         List<CL_Pokemon> fs = _ar.getPokemons();
-        ImageIcon pokemonImg = new ImageIcon("pikachu.png");
+        ImageIcon yellowPokemon = new ImageIcon("pikachu.png");
+        ImageIcon greenPokemon = new ImageIcon("bulbasaur.png");
+        ImageIcon pokemonIcon = yellowPokemon;
         if(fs!=null) {
             Iterator<CL_Pokemon> itr = fs.iterator();
 
             while(itr.hasNext()) {
                 CL_Pokemon pokemon = itr.next();
-                totalValue +=pokemon.getValue();
+
                 Point3D point = pokemon.getLocation();
                 int r=10;
                 g.setColor(Color.green);
 //                if(pokemon.getType()<0) {g.setColor(Color.orange);}
-                if(point!=null && pokemon.getType()<0) {
+                if(point!=null) {
                     geo_location pokemonLocation = this._w2f.world2frame(point);
-                    g.drawImage(pokemonImg.getImage(), (int)pokemonLocation.x()-r, (int)pokemonLocation.y()-r,2*r+5, 2*r+5, this);
 
+                    if(pokemon.getType()<0) {
+                        pokemonIcon = greenPokemon;
+                    }else {
+                        pokemonIcon = yellowPokemon;
+                    }
+                    g.drawImage(pokemonIcon.getImage(), (int) pokemonLocation.x() - r, (int) pokemonLocation.y() - r, 2 * r + 5, 2 * r + 5, this);
+                    g.setFont(new Font("Wide Latin", Font.BOLD,15));
+                    g.setColor(new Color(0x890808));
+                    g.drawString(new DecimalFormat(".#").format(pokemon.getValue()) + "", (int)pokemonLocation.x()-2*r, (int)pokemonLocation.y()-r);
+                    g.setFont(new Font("MV Boli", Font.BOLD,15));
 //                  g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
 
                 }
             }
+            didThatalready = true;
         }
     }
     private void drawAgents(Graphics g) {
@@ -128,13 +149,18 @@ public class gamePanel extends JPanel {
             int r=8;
             i++;
             if(agentLocation!=null) {
-//                drawProgressBar(g, agent);
+
+                drawProgressBarAndTitle(g);
                 geo_location fp = this._w2f.world2frame(agentLocation);
-                g.drawImage(ashImg.getImage(), (int)fp.x()-r, (int)fp.y()-r,4*r, 6*r, this);
+                g.drawImage(ashImg.getImage(), (int)fp.x()-r, (int)fp.y()-r,4*r, 4*r, this);
                 g.setColor(new Color(0x000000));
 
-                g.drawString(agent.getID() + " - " + agent.getValue(), (int)fp.x(), (int)fp.y()-4*r);
-            //                g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+                g.drawString(agent.getID() + ": to-" + agent.getNextNode() + " from- " + agent.getSrcNode() , (int)fp.x()-50, (int)fp.y()-2*r);
+                g.setFont(new Font("Wide Latin", Font.BOLD,15));
+                g.setColor(new Color(0x890808));
+                g.drawString(new DecimalFormat(".#").format(agent.getValue()) + "", (int)fp.x()-20, (int)fp.y()+4*r);
+                g.setFont(new Font("MV Boli", Font.BOLD,15));
+                //                g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
             }
         }
     }

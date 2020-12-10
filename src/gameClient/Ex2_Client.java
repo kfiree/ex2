@@ -39,7 +39,7 @@ public class Ex2_Client implements Runnable{
 //        gamePanel.setBackground(Color.lightGray);
 //        this.setContentPane(gamePanel);
 		game.startGame();
-		_win.setTitle("Kfir&Tehila's Arena" + game.toString());
+		_win.setTitle("Kfir&Tehila's Arena");
 //		ImageIcon icon = new ImageIcon("jangoIcon");
 //		_win.setIconImage(icon.getImage());
 		int ind=0;
@@ -48,7 +48,7 @@ public class Ex2_Client implements Runnable{
 		while(game.isRunning()) {
 //			icon = new ImageIcon("jangoIcon");
 //			_win.setIconImage(icon.getImage());
-			moveAgants(game, gg);
+			moveAgents(game, gg);
 			try {
 				if(ind%1==0) {_win.repaint();}
 				Thread.sleep(dt);
@@ -70,7 +70,7 @@ public class Ex2_Client implements Runnable{
 	 * @param gg
 	 * @param
 	 */
-	private static void moveAgants(game_service game, directed_weighted_graph gg) {
+	private static void moveAgents(game_service game, directed_weighted_graph gg) {
 		String lg = game.move();
 		List<CL_Agent> log = Arena.getAgents(lg, gg);
 		_ar.setAgents(log);
