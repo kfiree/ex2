@@ -24,20 +24,12 @@ public class Ex2_Client implements Runnable{
 	public void run() {
 		int scenario_num = 11;
 		game_service game = Game_Server_Ex2.getServer(scenario_num); // you have [0,23] games
-		//	int id = 999;
-		//	game.login(id);
-		String g = game.getGraph();
-		String pks = game.getPokemons();
-		directed_weighted_graph gg = game.getJava_Graph_Not_to_be_used();
+
+//		String g = game.getGraph();
+//		String pokemons = game.getPokemons();
+		directed_weighted_graph g = game.getJava_Graph_Not_to_be_used();
 		init(game);
-//        this.setVisible(true); //make frame visible
-//        this.setTitle();   //set title of frame
-//        this.setSize(500, 500);      //set size
-//        this.setLocationRelativeTo(null);       //centering the frame
-//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//set exit program plane
-//        Panel gamePanel = new Panel();
-//        gamePanel.setBackground(Color.lightGray);
-//        this.setContentPane(gamePanel);
+
 		game.startGame();
 		_win.setTitle("Kfir&Tehila's Arena");
 //		ImageIcon icon = new ImageIcon("jangoIcon");
@@ -48,7 +40,7 @@ public class Ex2_Client implements Runnable{
 		while(game.isRunning()) {
 //			icon = new ImageIcon("jangoIcon");
 //			_win.setIconImage(icon.getImage());
-			moveAgents(game, gg);
+			moveAgents(game, g);
 			try {
 				if(ind%1==0) {_win.repaint();}
 				Thread.sleep(dt);
@@ -67,26 +59,26 @@ public class Ex2_Client implements Runnable{
 	 * Moves each of the agents along the edge,
 	 * in case the agent is on a node the next destination (next edge) is chosen (randomly).
 	 * @param game
-	 * @param gg
+	 * @param g
 	 * @param
 	 */
-	private static void moveAgents(game_service game, directed_weighted_graph gg) {
+	private static void moveAgents(game_service game, directed_weighted_graph g) {
 		String lg = game.move();
-		List<CL_Agent> log = Arena.getAgents(lg, gg);
-		_ar.setAgents(log);
+		List<CL_Agent> agentList = Arena.getAgents(lg, g);
+		_ar.setAgents(agentList);
 		//ArrayList<OOP_Point3D> rs = new ArrayList<OOP_Point3D>();
 		String fs =  game.getPokemons();
 		List<CL_Pokemon> ffs = Arena.json2Pokemons(fs);
 		_ar.setPokemons(ffs);
-		for(int i=0;i<log.size();i++) {
-			CL_Agent ag = log.get(i);
-			int id = ag.getID();
-			int dest = ag.getNextNode();
-			int src = ag.getSrcNode();
-			double v = ag.getValue();
+		for(int i=0;i<agentList.size();i++) {
+			CL_Agent agent = agentList.get(i);
+			int id = agent.getID();
+			int dest = agent.getNextNode();
+			int src = agent.getSrcNode();
+			double v = agent.getValue();
 			if(dest==-1) {
-				dest = nextNode(gg, src);
-				game.chooseNextEdge(ag.getID(), dest);
+				dest = nextNode(g, src);
+				game.chooseNextEdge(agent.getID(), dest);
 				System.out.println("Agent: "+id+", val: "+v+"   turned to node: "+dest);
 			}
 		}
@@ -109,12 +101,12 @@ public class Ex2_Client implements Runnable{
 		return ans;
 	}
 	private void init(game_service game) {
-		String g = game.getGraph();
+//		String g = game.getGraph();
 		String fs = game.getPokemons();
-		directed_weighted_graph gg = game.getJava_Graph_Not_to_be_used();
+		directed_weighted_graph g = game.getJava_Graph_Not_to_be_used();
 		//gg.init(g);
 		_ar = new Arena();
-		_ar.setGraph(gg);
+		_ar.setGraph(g);
 		_ar.setPokemons(Arena.json2Pokemons(fs));
 		_win = new window("test Ex2");
 		_win.setSize(1000, 700);
@@ -133,7 +125,7 @@ public class Ex2_Client implements Runnable{
 			System.out.println(game.getPokemons());
 			int src_node = 0;  // arbitrary node, you should start at one of the pokemon
 			ArrayList<CL_Pokemon> cl_fs = Arena.json2Pokemons(game.getPokemons());
-			for(int a = 0;a<cl_fs.size();a++) { Arena.updateEdge(cl_fs.get(a),gg);}
+			for(int a = 0;a<cl_fs.size();a++) { Arena.updateEdge(cl_fs.get(a),g);}
 			for(int a = 0;a<rs;a++) {
 				int ind = a%cl_fs.size();
 				CL_Pokemon c = cl_fs.get(ind);
