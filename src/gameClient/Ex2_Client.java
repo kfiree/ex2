@@ -1,9 +1,7 @@
 package gameClient;
 
 import Server.Game_Server_Ex2;
-import api.directed_weighted_graph;
-import api.edge_data;
-import api.game_service;
+import api.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -68,8 +66,8 @@ public class Ex2_Client implements Runnable{
 		_ar.setAgents(agentList);
 		//ArrayList<OOP_Point3D> rs = new ArrayList<OOP_Point3D>();
 		String fs =  game.getPokemons();
-		List<CL_Pokemon> ffs = Arena.json2Pokemons(fs);
-		_ar.setPokemons(ffs);
+		List<CL_Pokemon> pokemons = Arena.json2Pokemons(fs);
+		_ar.setPokemons(pokemons);
 		for(int i=0;i<agentList.size();i++) {
 			CL_Agent agent = agentList.get(i);
 			int id = agent.getID();
@@ -77,7 +75,10 @@ public class Ex2_Client implements Runnable{
 			int src = agent.getSrcNode();
 			double v = agent.getValue();
 			if(dest==-1) {
-				dest = nextNode(g, src);
+//				dest = nextNode(g, src);
+				dw_graph_algorithms ga = new Algo_DWGraph();
+				ga.init(_ar.getGraph());
+				dest = agent.calculateClosestPokemon(pokemons, ga);
 				game.chooseNextEdge(agent.getID(), dest);
 				System.out.println("Agent: "+id+", val: "+v+"   turned to node: "+dest);
 			}

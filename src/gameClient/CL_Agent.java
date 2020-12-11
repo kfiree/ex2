@@ -121,23 +121,71 @@ public class CL_Agent {
 	 * @param ga
 	 * @return -1 if there is no pokemon available for agent
 	 */
-	public int calculateClosestPokemon(List<CL_Pokemon> pokemons, Algo_DWGraph ga) {
+	public int calculateClosestPokemon(List<CL_Pokemon> pokemons, dw_graph_algorithms ga) {
 		int closestPokemon = -1;
-		double closestPokemonDist = -1;
+		double closestPokemonDist = -1, bestValue = -1, bestValueDist = -1;
 		for(CL_Pokemon pokemon: pokemons){
 			edge_data edge = pokemon.get_edge();
-			if(!pokemon.isPersecuted()){
-				//TODO check if needed
-				double distFromNodeToP = pokemon.getLocation().distance(ga.getGraph().getNode(edge.getSrc()).getLocation());//how far is pokemon from closest node to it
+			//TODO check if needed
+			//TODO maybe check dest to dest instead
+			double distFromNodeToP = pokemon.getLocation().distance(ga.getGraph().getNode(edge.getSrc()).getLocation());//how far is pokemon from closest node to it
+			double distToPokemon = ga.shortestPathDist(this._curr_node.getKey(), edge.getSrc())+distFromNodeToP;
 
-				double pathToPokemon = ga.shortestPathDist(this._curr_node.getKey(), edge.getSrc())+distFromNodeToP;
-				if( pathToPokemon < closestPokemonDist || closestPokemonDist ==-1){
+			if(!pokemon.isPersecuted()){
+				if(pokemon.getValue()>bestValue){
+					bestValue = pokemon.getValue();
+				} else if(pokemon.getValue()==bestValue) {
+					if(bestValueDist>distToPokemon){
+						bestValue = pokemon.getValue();
+						bestValueDist = distToPokemon;
+					}
+				}else {
+					double distSoFar = ga.shortestPathDist(this._curr_node.getKey(), edge.getSrc())+edge.getWeight();
+					double nextStepsDist = distSoFar;
+					if(calculateNextStep(pokemons, ga, edge.getDest(), bestValueDist, bestValue, distSoFar, pokemon.getValue())){
+						//TODO make agent take this path
+					}
+
+
+				}
+
+				if( distToPokemon < closestPokemonDist || closestPokemonDist ==-1){
 					closestPokemon = edge.getSrc();
-					closestPokemonDist = pathToPokemon;
+					closestPokemonDist = distToPokemon;
 				}
 			}
 		}
 		return closestPokemon;
+	}
+
+	private boolean calculateNextStep(List<CL_Pokemon> pokemons, dw_graph_algorithms ga, int currNodeKey, double bestValueDist, double bestValue, double distSoFar, double valueSoFar){
+		while(bestValueDist>distSoFar){
+			for(CL_Pokemon pokemon: pokemons){
+				edge_data edge = pokemon.get_edge();
+				//TODO check if needed
+				double distFromNodeToP = pokemon.getLocation().distance(ga.getGraph().getNode(edge.getSrc()).getLocation());//how far is pokemon from closest node to it
+				double distToPokemon = ga.shortestPathDist(currNodeKey, edge.getSrc())+distFromNodeToP;
+
+				if(!pokemon.isPersecuted()){
+
+					if((pokemon.getValue()+valueSoFar>bestValue && bestValueDist>=distToPokemon+distSoFar)||
+							(pokemon.getValue()+valueSoFar==bestValue && bestValueDist>distToPokemon+distSoFar)){
+						return true;
+					} else if(pokemon.getValue()+valueSoFar<bestValue && bestValueDist>distToPokemon+distSoFar){
+						calculateNextStep(pokemons, ga, edge.getSrc(), bestValueDist, bestValue, distToPokemon+distSoFar ,pokemon.getValue()+valueSoFar);
+					}
+//					} else if(pokemon.getValue()==bestValue) {
+					if(bestValueDist>distToPokemon){
+						bestValue = pokemon.getValue();
+						bestValueDist = distToPokemon;
+					}
+				}else {
+
+				}
+			}
+
+		}
+		return false;
 	}
 
 	public int getNextNode() {
