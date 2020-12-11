@@ -1,11 +1,10 @@
 package gameClient;
 
-import api.directed_weighted_graph;
-import api.edge_data;
-import api.geo_location;
-import api.node_data;
+import api.*;
 import gameClient.util.Point3D;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class CL_Agent {
 	public static final double EPS = 0.0001;
@@ -114,7 +113,32 @@ public class CL_Agent {
 		return this._value;
 	}
 
+	//TODO might use synchronized
 
+	/**
+	 *
+	 * @param pokemons
+	 * @param ga
+	 * @return -1 if there is no pokemon available for agent
+	 */
+	public int calculateClosestPokemon(List<CL_Pokemon> pokemons, Algo_DWGraph ga) {
+		int closestPokemon = -1;
+		double closestPokemonDist = -1;
+		for(CL_Pokemon pokemon: pokemons){
+			edge_data edge = pokemon.get_edge();
+			if(!pokemon.isPersecuted()){
+				//TODO check if needed
+				double distFromNodeToP = pokemon.getLocation().distance(ga.getGraph().getNode(edge.getSrc()).getLocation());//how far is pokemon from closest node to it
+
+				double pathToPokemon = ga.shortestPathDist(this._curr_node.getKey(), edge.getSrc())+distFromNodeToP;
+				if( pathToPokemon < closestPokemonDist || closestPokemonDist ==-1){
+					closestPokemon = edge.getSrc();
+					closestPokemonDist = pathToPokemon;
+				}
+			}
+		}
+		return closestPokemon;
+	}
 
 	public int getNextNode() {
 		int ans = -2;
