@@ -75,10 +75,10 @@ public class Ex2_Client implements Runnable{
 			int src = agent.getSrcNode();
 			double v = agent.getValue();
 			if(dest==-1) {
-//				dest = nextNode(g, src);
-				dw_graph_algorithms ga = new Algo_DWGraph();
-				ga.init(_ar.getGraph());
-				dest = agent.calculateClosestPokemon(pokemons, ga);
+				dest = nextNode(g, src);
+//				dw_graph_algorithms ga = new Algo_DWGraph();
+//				ga.init(_ar.getGraph());
+//				dest = agent.calculateClosestPokemon(pokemons, ga);
 				game.chooseNextEdge(agent.getID(), dest);
 				System.out.println("Agent: "+id+", val: "+v+"   turned to node: "+dest);
 			}
