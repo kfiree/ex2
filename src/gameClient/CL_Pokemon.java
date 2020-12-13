@@ -10,7 +10,8 @@ public class CL_Pokemon {
 	private Point3D _pos;
 	private double min_dist;
 	private int min_ro;
-	boolean persecuted;
+	int persecutedBy;
+	double tag;
 	//TODO add who persecuted for switching
 
 	public CL_Pokemon(Point3D p, int t, double v, double s, edge_data e) {
@@ -66,11 +67,20 @@ public class CL_Pokemon {
 		this.min_ro = min_ro;
 	}
 
-	public boolean isPersecuted() {
-		return persecuted;
+	public int getPersecutedBy() {
+		return persecutedBy;
 	}
 
-	public void setPersecuted(boolean persecuted) {
-		this.persecuted = persecuted;
+	public void setPersecutedBy(int persecutedBy) {
+		this.persecutedBy = persecutedBy;
 	}
+
+	public double getTag() {
+		return tag;
+	}
+
+	public void setTag(double tag) {
+		this.tag = tag;
+	}
+
 }

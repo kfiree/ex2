@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class gamePanel extends JPanel {
+    private long timeLeft;
     private int _ind;
     private Arena _ar;
     private gameClient.util.Range2Range _w2f;
@@ -67,21 +68,24 @@ public class gamePanel extends JPanel {
         for(CL_Agent a: _ar.getAgents()){
             currValue+= a.getValue();
         }
+
         int totalValue = currValue;
         for(CL_Pokemon p: _ar.getPokemons()){
             totalValue += p.getValue();
         }
+
         ImageIcon headline = new ImageIcon("arena.png");
         g.drawImage(headline.getImage(), (this.getWidth()/2)-200, 10, 400, 45, this);
+
         JProgressBar bar = new JProgressBar(0,totalValue);
-        bar.setValue(0);
         bar.setBounds(0, 80 ,this.getWidth(),50);
         bar.setStringPainted(true);
         bar.setBackground(Color.black);
         bar.setForeground(Color.red);
         this.add(bar);
         g.setColor(Color.white);
-        bar.setString("Value of " + currValue + "Pokemons have been captured out of " + totalValue);
+        bar.setString("Time left for game " + timeLeft );
+//        bar.setString("Value of " + currValue + "Pokemons have been captured out of " + totalValue);
         bar.setValue(currValue);
         this.add(bar);
     }
@@ -183,5 +187,9 @@ public class gamePanel extends JPanel {
         g2D.setStroke(new BasicStroke(4));
         g2D.drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
         //	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
+    }
+
+    public void setTimeLeft(long timeLeft) {
+        this.timeLeft = timeLeft;
     }
 }
