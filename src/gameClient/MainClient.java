@@ -6,10 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class MainClient  implements Runnable{
     private static window gameWindow;
@@ -142,7 +139,7 @@ public class MainClient  implements Runnable{
         ga.init(g);
 
         List<CL_Pokemon> pokemons = arena.getPokemons();
-        List<CL_Agent> agents = arena.getAgents();
+
         PriorityQueue<PokemonEntry> pokemonQueue = agent.getPokemonsVal();
 //        init(game);
         for (int a = 0; a < pokemons.size(); a++) {
@@ -160,44 +157,50 @@ public class MainClient  implements Runnable{
                 //TODO set agent Queue
             }
         }
+        LinkedList<CL_Agent> agentsList  = new LinkedList<>();
+        agentsList.add(agent);
 
-        List<CL_Agent> hAgents = arena.getAgents();
-        Iterator<CL_Agent> itr = hAgents.iterator();
-        while(itr.hasNext()){
+        while(agentsList.isEmpty()){
             //TODO check if already on the hunt
-            CL_Agent iAgent = itr.next();
+            CL_Agent iAgent = agentsList.removeFirst();
             PokemonEntry pEntry = agent.getPokemonsVal().poll();
-            if(pEntry!=null) {
+
+            if (pEntry != null) {
 
                 CL_Pokemon pokemon = pEntry.getPokemon();
 
                 if (pokemon.persecutedBy == -1) {
-                    iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()));
-                    hAgents.remove(iAgent);
+                    iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()), g.getNode(pokemon.get_edge().getDest()));
                 } else {
                     double value = iAgent.getPokemonsVal().peek().getValue();
-                    CL_Agent currAgentAfter = agents.get(pokemon.getPersecutedBy());
+                    CL_Agent currAgentAfter = arena.getAgents().get(pokemon.getPersecutedBy());
+                    double thisHuntValue = iAgent.getPokemonsVal().peek().getValue();
+                    double otherHuntValue = currAgentAfter.getPokemonsVal().peek().getValue();
                     //if new agent have better hunt Value
-                    if (currAgentAfter.getPokemonsVal().peek().getValue() < iAgent.getPokemonsVal().peek().getValue()) {
+                    if (otherHuntValue < thisHuntValue) {
                         //clear old
                         currAgentAfter.getPokemonsVal().poll();
-                        hAgents.add(currAgentAfter);
+                        agentsList.add(currAgentAfter);
+
                         //set new persecuted
-                        iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()));
-                        hAgents.remove(iAgent);
+                        iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()), g.getNode(pokemon.get_edge().getDest()));
                     } else {
                         //if this agent have worst huntVal then sent him to another pokemon
                         iAgent.getPokemonsVal().poll();
                         //sent agent to the end of list
-                        hAgents.remove(iAgent);
-                        hAgents.add(iAgent);
+                        agentsList.add(iAgent);
                     }
                 }
 
             }
+
         }
+
     }
 
+    private static void calculateAgentsPath(CL_Agent agent, dw_graph_algorithms ga){
+
+    }
 
     private static void init (game_service game){
 

@@ -277,7 +277,8 @@ public class CL_Agent {
 		return path;
 	}
 
-	public void setPath(List<node_data> path) {
+	public void setPath(List<node_data> path, node_data dest) {
+		path.add(dest);
 		this.path = path;
 	}
 
@@ -288,4 +289,5 @@ public class CL_Agent {
 	public void setPokemonsVal(PriorityQueue<PokemonEntry> pokemonsVal) {
 		this.pokemonsVal = pokemonsVal;
 	}
+
 }
