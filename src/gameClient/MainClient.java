@@ -134,6 +134,7 @@ public class MainClient  implements Runnable{
     }
 
     //todo check time left?
+    //TODO synchronize
     private static void calculateAgentsPath(game_service game, CL_Agent agent) {
         directed_weighted_graph g = json2graph(game);
 
@@ -143,7 +144,7 @@ public class MainClient  implements Runnable{
         List<CL_Pokemon> pokemons = arena.getPokemons();
         List<CL_Agent> agents = arena.getAgents();
         PriorityQueue<PokemonEntry> pokemonQueue = agent.getPokemonsVal();
-        init(game);
+//        init(game);
         for (int a = 0; a < pokemons.size(); a++) {
             Arena.updateEdge(pokemons.get(a), g);
         }
@@ -152,16 +153,18 @@ public class MainClient  implements Runnable{
             edge_data edge = pokemon.get_edge();
             //TODO maybe check dist to dest instead
             if(edge!=null){
-                double distToPokemon = ga.shortestPathDist(agent.getSrcNode(), pokemon.get_edge().getDest());
+                double distToPokemon = ga.shortestPathDist(agent.getSrcNode(), pokemon.get_edge().getSrc());
                 double huntValue = pokemon.getValue() / distToPokemon;
 
                 pokemonQueue.add(new PokemonEntry(huntValue, pokemon));
+                //TODO set agent Queue
             }
         }
 
         List<CL_Agent> hAgents = arena.getAgents();
         Iterator<CL_Agent> itr = hAgents.iterator();
         while(itr.hasNext()){
+            //TODO check if already on the hunt
             CL_Agent iAgent = itr.next();
             PokemonEntry pEntry = agent.getPokemonsVal().poll();
             if(pEntry!=null) {
@@ -172,7 +175,7 @@ public class MainClient  implements Runnable{
                     iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()));
                     hAgents.remove(iAgent);
                 } else {
-                    iAgent.getPokemonsVal().peek().getValue();
+                    double value = iAgent.getPokemonsVal().peek().getValue();
                     CL_Agent currAgentAfter = agents.get(pokemon.getPersecutedBy());
                     //if new agent have better hunt Value
                     if (currAgentAfter.getPokemonsVal().peek().getValue() < iAgent.getPokemonsVal().peek().getValue()) {
@@ -232,7 +235,7 @@ public class MainClient  implements Runnable{
                 if (pokemon.getType() < 0) {
                     dest = pokemon.get_edge().getSrc();
                 }
-
+//TODO for tehila the queen of the jsons the first
                 game.addAgent(dest);
             }
         } catch (JSONException e) {
