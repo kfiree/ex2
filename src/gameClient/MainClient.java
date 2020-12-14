@@ -31,34 +31,7 @@ public class MainClient  implements Runnable{
         int scenario_num = 11;
         game_service game = Game_Server_Ex2.getServer(scenario_num);
 
-//        directed_weighted_graph g = game.getJava_Graph_Not_to_be_used();
-
-            JSONObject jsonObj;
-            DS_DWGraph g = new DS_DWGraph();
-            try {
-                jsonObj = new JSONObject(game.getGraph());
-                JSONArray nodeJsonObj = jsonObj.getJSONArray("Nodes");
-                JSONArray edgeJsonObj = jsonObj.getJSONArray("Edges");
-
-                for(int i=0;i<nodeJsonObj.length();i++) {
-                    JSONObject node_dataObj = nodeJsonObj.getJSONObject(i);
-                    int key = node_dataObj.getInt("id");
-                    node_data n = new nodeData(key);
-                    g.addNode(n);
-                }
-
-                for(int i=0;i<edgeJsonObj.length();i++) {
-                    JSONObject edge_dataObj = edgeJsonObj.getJSONObject(i);
-                    int src = edge_dataObj.getInt("src");
-                    int dest = edge_dataObj.getInt("dest");
-                    double w = edge_dataObj.getDouble("w");
-                    g.connect(src, dest, w);
-                }
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
-
+        directed_weighted_graph g = json2graph(game);
 
         init(game);
 
@@ -114,6 +87,35 @@ public class MainClient  implements Runnable{
             }
         }
     }
+    public static DS_DWGraph json2graph (game_service game){
+
+        JSONObject jsonObj;
+        DS_DWGraph g = new DS_DWGraph();
+        try {
+            jsonObj = new JSONObject(game.getGraph());
+            JSONArray nodeJsonObj = jsonObj.getJSONArray("Nodes");
+            JSONArray edgeJsonObj = jsonObj.getJSONArray("Edges");
+
+            for(int i=0;i<nodeJsonObj.length();i++) {
+                JSONObject node_dataObj = nodeJsonObj.getJSONObject(i);
+                int key = node_dataObj.getInt("id");
+                node_data n = new nodeData(key);
+                g.addNode(n);
+            }
+
+            for(int i=0;i<edgeJsonObj.length();i++) {
+                JSONObject edge_dataObj = edgeJsonObj.getJSONObject(i);
+                int src = edge_dataObj.getInt("src");
+                int dest = edge_dataObj.getInt("dest");
+                double w = edge_dataObj.getDouble("w");
+                g.connect(src, dest, w);
+            }
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return g;
+    }
 
     private static int nextNode(directed_weighted_graph g, CL_Agent agent) {
         List<node_data> path = agent.getPath();
@@ -131,24 +133,17 @@ public class MainClient  implements Runnable{
 
     //todo check time left?
     private static void calculateAgentsPath(game_service game, CL_Agent agent) {
-
-//        String graphJ = game.getGraph();
-//
-//        GsonBuilder builder = new GsonBuilder();
-//        DS_DWGraph g = new DS_DWGraph();
-//        builder.registerTypeAdapter(g.getClass(), new GameGraph_Deserializer() );
-//        Gson gson = builder.create();
-//        g = gson.fromJson(graphJ, g.getClass());
+        directed_weighted_graph g = json2graph(game);
 
         dw_graph_algorithms ga = new Algo_DWGraph();
-//        ga.init(g);
+        ga.init(g);
 
         List<CL_Pokemon> pokemons = arena.getPokemons();
         List<CL_Agent> agents = arena.getAgents();
         PriorityQueue<PokemonEntry> pokemonQueue = agent.getPokemonsVal();
         init(game);
         for (int a = 0; a < pokemons.size(); a++) {
-//            Arena.updateEdge(pokemons.get(a), g);
+            Arena.updateEdge(pokemons.get(a), g);
         }
         for (CL_Pokemon pokemon : pokemons) {
 
