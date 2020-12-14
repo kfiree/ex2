@@ -2,18 +2,14 @@ package gameClient;
 
 import Server.Game_Server_Ex2;
 import api.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
-import gameClient.util.Point3D;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class MainClient  implements Runnable{
     private static window gameWindow;
@@ -197,7 +193,8 @@ public class MainClient  implements Runnable{
     private static void init (game_service game){
 
         String pokemonString = game.getPokemons();
-        directed_weighted_graph g = game.getJava_Graph_Not_to_be_used();
+//        directed_weighted_graph g = game.getJava_Graph_Not_to_be_used();
+        directed_weighted_graph g = json2graph(game);
 
         arena = new Arena();
         arena.setGraph(g);
@@ -213,28 +210,27 @@ public class MainClient  implements Runnable{
         JSONObject line;
         try {
             line = new JSONObject(info);
-            JSONObject ttt = line.getJSONObject("GameServer");
-            int rs = ttt.getInt("agents");
-            System.out.println(info);
-            System.out.println(game.getPokemons());
+            JSONObject gameServerJ = line.getJSONObject("GameServer");
+            int agentsNum = gameServerJ.getInt("agents");
             int src_node = 0;  // arbitrary node, you should start at one of the pokemon
             ArrayList<CL_Pokemon> pokemons = Arena.json2Pokemons(game.getPokemons());
-            for (int a = 0; a < pokemons.size(); a++) {
-                Arena.updateEdge(pokemons.get(a), g);
+
+            for (int i = 0; i < pokemons.size(); i++) {
+                Arena.updateEdge(pokemons.get(i), g);
             }
-            for (int a = 0; a < rs; a++) {
-                int ind = a % pokemons.size();
-                CL_Pokemon c = pokemons.get(ind);
-                int nn = c.get_edge().getDest();
-                if (c.getType() < 0) {
-                    nn = c.get_edge().getSrc();
+
+            for (int i = 0; i < agentsNum; i++) {
+                int ind = i % pokemons.size();
+                CL_Pokemon pokemon = pokemons.get(ind);
+                int dest = pokemon.get_edge().getDest();
+                if (pokemon.getType() < 0) {
+                    dest = pokemon.get_edge().getSrc();
                 }
 
-                game.addAgent(nn);
+                game.addAgent(dest);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 }
-

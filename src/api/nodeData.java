@@ -1,8 +1,6 @@
 package api;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 public class nodeData implements node_data, Comparable {
