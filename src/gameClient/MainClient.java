@@ -116,14 +116,14 @@ public class MainClient  implements Runnable{
 
     private static int nextNode(directed_weighted_graph g, CL_Agent agent) {
         List<node_data> path = agent.getPath();
-        if(path!=null){
-            if(!path.isEmpty()) {
-                if (agent.getSrcNode() == path.get(0).getKey()) {
-                    path.remove(0);
-                }
-
-                return path.get(0).getKey();
+        if(path!=null && !path.isEmpty()){
+            node_data nextNode;
+            if (agent.getSrcNode() == path.get(0).getKey()) {
+                nextNode = path.remove(0);
+            }else{
+                nextNode = path.get(0);
             }
+            return nextNode.getKey();
         }
         return -1;
     }
@@ -193,10 +193,6 @@ public class MainClient  implements Runnable{
 
     }
 
-    private static void calculateAgentsPath(CL_Agent agent, dw_graph_algorithms ga){
-
-    }
-
     private static void init (game_service game){
 
         String pokemonString = game.getPokemons();
@@ -210,7 +206,6 @@ public class MainClient  implements Runnable{
         gameWindow.setSize(1000, 700);
         gameWindow.panel.update(arena);
         gameWindow.panel.setTimeLeft(game.timeToEnd());
-
 
         gameWindow.show();
         String info = game.toString();
