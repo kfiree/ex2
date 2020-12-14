@@ -95,7 +95,13 @@ public class MainClient  implements Runnable{
             for(int i=0;i<nodeJsonObj.length();i++) {
                 JSONObject node_dataObj = nodeJsonObj.getJSONObject(i);
                 int key = node_dataObj.getInt("id");
+                String POS = node_dataObj.getString("pos");
+                String [] XY = POS.split(",");
+                double x = Double.parseDouble(XY[0]);
+                double y = Double.parseDouble(XY[1]);
+                geoLocation pos = new geoLocation (x,y,0);
                 node_data n = new nodeData(key);
+                n.setLocation(pos);
                 g.addNode(n);
             }
 
