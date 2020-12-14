@@ -1,9 +1,9 @@
 package gameClient;
 
 import Server.Game_Server_Ex2;
-import api.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import api.directed_weighted_graph;
+import api.edge_data;
+import api.game_service;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,15 +25,15 @@ public class Ex2_Client implements Runnable{
 		int scenario_num = 11;
 		game_service game = Game_Server_Ex2.getServer(scenario_num); // you have [0,23] games
 
-		DS_DWGraph g = new DS_DWGraph();
-		String jsonG = game.getGraph();
-		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(g.getClass(), new GameGraph_Deserializer() );
-		Gson gson = builder.create();
-
-		g = gson.fromJson(jsonG, g.getClass());
-//		String pokemons = game.getPokemons();
-//		directed_weighted_graph g = game.getJava_Graph_Not_to_be_used();
+//		DS_DWGraph g = new DS_DWGraph();
+//		String jsonG = game.getGraph();
+//		GsonBuilder builder = new GsonBuilder();
+//		builder.registerTypeAdapter(g.getClass(), new GameGraph_Deserializer() );
+//		Gson gson = builder.create();
+//
+//		g = gson.fromJson(jsonG, g.getClass());
+		String pokemons = game.getPokemons();
+		directed_weighted_graph g = game.getJava_Graph_Not_to_be_used();
 		init(game);
 
 		game.startGame();

@@ -121,7 +121,9 @@ public class Arena {
 			while(iter.hasNext()) {
 				edge_data e = iter.next();
 				boolean f = isOnEdge(fr.getLocation(), e,fr.getType(), g);
-				if(f) {fr.set_edge(e);}
+				if(f) {
+					fr.set_edge(e);
+				}
 			}
 		}
 	}
