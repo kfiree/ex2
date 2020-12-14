@@ -28,7 +28,7 @@ public class Ex2_Client implements Runnable{
 		DS_DWGraph g = new DS_DWGraph();
 		String jsonG = game.getGraph();
 		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(g.getClass(), new DS_DWGraphJsonDeserializer() );
+		builder.registerTypeAdapter(g.getClass(), new GameGraph_Deserializer() );
 		Gson gson = builder.create();
 
 		g = gson.fromJson(jsonG, g.getClass());
