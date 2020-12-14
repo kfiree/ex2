@@ -10,7 +10,7 @@ public class CL_Pokemon {
 	private Point3D _pos;
 	private double min_dist;
 	private int min_ro;
-	int persecutedBy;
+	int persecutedBy = -1;
 	double tag;
 	//TODO add who persecuted for switching
 

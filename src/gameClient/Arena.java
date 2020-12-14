@@ -78,7 +78,7 @@ public class Arena {
 
 	////////////////////////////////////////////////////
 	public static List<CL_Agent> getAgents(String aa, directed_weighted_graph gg) {
-		ArrayList<CL_Agent> ans = new ArrayList<CL_Agent>();
+		ArrayList<CL_Agent> ans = new ArrayList<>();
 		try {
 			JSONObject ttt = new JSONObject(aa);
 			JSONArray ags = ttt.getJSONArray("Agents");

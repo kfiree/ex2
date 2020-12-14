@@ -55,12 +55,10 @@ public class MainClient  implements Runnable{
     private static void moveAgents(game_service game, directed_weighted_graph g) {
         //set agents
         String updatedArena = game.move();
-        List<CL_Agent> agentList = Arena.getAgents(updatedArena, g);
+        List<CL_Agent> agentList = arena.getAgents(updatedArena, g);
+//        List<CL_Agent> agents = arena.getAgents();
         arena.setAgents(agentList);
 
-        //set pokemons
-        List<CL_Pokemon> pokemons = Arena.json2Pokemons(game.getPokemons());
-        arena.setPokemons(pokemons);
 
         for(int i=0;i<agentList.size();i++) {
             CL_Agent agent = agentList.get(i);
@@ -69,11 +67,11 @@ public class MainClient  implements Runnable{
             int src = agent.getSrcNode();
 
             if(dest==-1) {
-                dest = nextNode(g, agent);
                 calculateAgentsPath(game, agent);
+                dest = nextNode(g, agent);
                 if(agent.path!=null){
 
-                    game.chooseNextEdge(i, agent.path.get(0).getKey());
+                    game.chooseNextEdge(i, dest);
 
                     System.out.println("Agent: "+agent.getID()+", val: "+agent.getValue()+"   turned to node: "+agent.getNextNode());
                 }
@@ -141,10 +139,7 @@ public class MainClient  implements Runnable{
         List<CL_Pokemon> pokemons = arena.getPokemons();
 
         PriorityQueue<PokemonEntry> pokemonQueue = agent.getPokemonsVal();
-//        init(game);
-        for (int a = 0; a < pokemons.size(); a++) {
-            Arena.updateEdge(pokemons.get(a), g);
-        }
+
         for (CL_Pokemon pokemon : pokemons) {
 
             edge_data edge = pokemon.get_edge();
@@ -160,7 +155,7 @@ public class MainClient  implements Runnable{
         LinkedList<CL_Agent> agentsList  = new LinkedList<>();
         agentsList.add(agent);
 
-        while(agentsList.isEmpty()){
+        while(!agentsList.isEmpty()){
             //TODO check if already on the hunt
             CL_Agent iAgent = agentsList.removeFirst();
             PokemonEntry pEntry = agent.getPokemonsVal().poll();
@@ -210,7 +205,7 @@ public class MainClient  implements Runnable{
 
         arena = new Arena();
         arena.setGraph(g);
-        arena.setPokemons(Arena.json2Pokemons(pokemonString));
+//        arena.setPokemons(Arena.json2Pokemons(pokemonString));
         gameWindow = new window("test Ex2");
         gameWindow.setSize(1000, 700);
         gameWindow.panel.update(arena);
@@ -241,8 +236,10 @@ public class MainClient  implements Runnable{
 //TODO for tehila the queen of the jsons the first
                 game.addAgent(dest);
             }
+            arena.setPokemons(pokemons);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 }
