@@ -269,6 +269,10 @@ public class CL_Agent {
 		return huntValue;
 	}
 
+	public void setHuntValue(double huntValue) {
+		this.huntValue = huntValue;
+	}
+
 	public void set_value(double _value) {
 		this._value = _value;
 	}
