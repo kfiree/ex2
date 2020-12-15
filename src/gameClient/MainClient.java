@@ -2,14 +2,12 @@ package gameClient;
 
 import Server.Game_Server_Ex2;
 import api.*;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class MainClient  implements Runnable{
     private static window gameWindow;
@@ -222,22 +220,62 @@ public class MainClient  implements Runnable{
             JSONObject gameServerJ = line.getJSONObject("GameServer");
             int agentsNum = gameServerJ.getInt("agents");
             int src_node = 0;  // arbitrary node, you should start at one of the pokemon
-            ArrayList<CL_Pokemon> pokemons = Arena.json2Pokemons(game.getPokemons());
+
+            List<CL_Pokemon> pokemons = Arena.json2Pokemons(game.getPokemons());
 
             for (int i = 0; i < pokemons.size(); i++) {
                 Arena.updateEdge(pokemons.get(i), g);
             }
 
-            for (int i = 0; i < agentsNum; i++) {
-                int ind = i % pokemons.size();
-                CL_Pokemon pokemon = pokemons.get(ind);
-                int dest = pokemon.get_edge().getDest();
-                if (pokemon.getType() < 0) {
-                    dest = pokemon.get_edge().getSrc();
+            Comparator cmp = new geoLoComp();
+            CL_Pokemon minP =  Collections.min(pokemons , cmp);
+            CL_Pokemon maxp= Collections.max(pokemons , cmp);
+
+            Collections.sort(pokemons);
+            geoLocation firsAxes = new geoLocation(0, 0, 0);
+
+            double min = minP.getLocation().distance(firsAxes);
+            double max = maxp.getLocation().distance(firsAxes);
+            double rang = ((max-min)/agentsNum)+min;
+
+            ArrayList <CL_Pokemon> pStartWith = new ArrayList<>();
+
+            int i =0;
+            while (rang-min < max){
+                while(i != pokemons.size()/2) {
+                    CL_Pokemon curr = pokemons.get(i);
+                    if (curr.getLocation().distance(minP.getLocation()) < rang) {
+                        pStartWith.add(curr);
+                        rang += min;
+                        i=0;
+                    }
+                    else {
+                        i++;
+                    }
                 }
-//TODO for tehila the queen of the jsons the first
-                game.addAgent(dest);
+                if (i > 0){
+                    rang += min;
+                    i=0;
+                }
             }
+            i=0;
+            int size = pStartWith.size();
+            while (size < agentsNum){
+                CL_Pokemon curr = pokemons.get(i);
+                if (! pStartWith.contains(curr)){
+                    pStartWith.add(curr);
+                    size++;
+                }
+                i++;
+            }
+
+            for (int j = 0; j < agentsNum; j++) {
+                CL_Pokemon startDest = pStartWith.get(j);
+                int nodeStart = startDest.getSrc();
+                game.addAgent(nodeStart);
+            }
+
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

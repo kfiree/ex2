@@ -1,9 +1,10 @@
 package gameClient;
 import api.edge_data;
 import gameClient.util.Point3D;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-public class CL_Pokemon {
+public class CL_Pokemon implements  Comparable<CL_Pokemon>{
 	private edge_data _edge;
 	private double _value;
 	private int _type;
@@ -12,6 +13,7 @@ public class CL_Pokemon {
 	private int min_ro;
 	int persecutedBy;
 	double tag;
+	int src;
 	//TODO add who persecuted for switching
 
 	public CL_Pokemon(Point3D p, int t, double v, double s, edge_data e) {
@@ -79,8 +81,28 @@ public class CL_Pokemon {
 		return tag;
 	}
 
+	public int getSrc (){
+
+		if (getType() < 0) { this.src = Math.max(get_edge().getSrc(),get_edge().getDest());}
+
+		else {this.src = Math.min(get_edge().getSrc(),get_edge().getDest());}
+
+		return this.src;
+
+	}
+
 	public void setTag(double tag) {
 		this.tag = tag;
 	}
 
+	@Override
+	public int compareTo(@NotNull CL_Pokemon o) {
+		if (this._value < o.getValue()){
+			return 1;
+		}
+		if (this._value > o.getValue()){
+			return -1;
+		}
+		return 0;
+	}
 }

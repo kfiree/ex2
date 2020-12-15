@@ -32,7 +32,7 @@ public class PokemonEntry implements  Comparable<PokemonEntry> {
     public int compareTo(@NotNull PokemonEntry other) {
         double thisVal = this.Value;
         double otherVal = other.getValue();
-        if(thisVal>otherVal){
+        if(thisVal<otherVal){
             return 1;
         }else if(thisVal==otherVal){
             return 0;

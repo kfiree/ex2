@@ -1,6 +1,11 @@
 package api;
 
-public class geoLocation implements geo_location {
+import gameClient.PokemonEntry;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Comparator;
+
+public class geoLocation implements geo_location,Comparable<geoLocation> {
 
     //TODO check if initilaize needed
     //TODO check if private or public
@@ -46,4 +51,17 @@ public class geoLocation implements geo_location {
         //3d distance = ((x2 - x1)2 + (y2 - y1)2 + (z2 - z1)2)1/2
         return Math.sqrt(Math.pow(this.x-otherG.x(), 2) + Math.pow(this.y-otherG.y(), 2) + Math.pow(this.z-otherG.z(), 2));
     }
+    @Override
+    public int compareTo(@NotNull geoLocation o) {
+        geoLocation firsAxes = new geoLocation(0, 0, 0);
+
+        if (distance(firsAxes) > o.distance(firsAxes)) {
+            return 1;
+        }
+        if (distance(firsAxes) < o.distance(firsAxes)) {
+            return -1;
+        }
+        return 0;
+    }
+
 }
