@@ -115,29 +115,26 @@ public class gameArena {
         Collections.sort(nodes, cmp);
 
         int i=0;
-        int j = nodes.size();
+        int j = nodes.size()-1;
 
-        
+        geoLocation po = pokemon.getLocation();
 
-        double pDistFromNodes = (pokemon.getLocation().distance(nodes.get(i).getLocation())) + (pokemon.getLocation().distance(nodes.get(j).getLocation()));
-        double nodesDist = nodes.get(i).getLocation().distance(nodes.get(j).getLocation());
-
-
-
-        //	oop_edge_data ans = null;
-        Iterator<node_data> itr = g.getV().iterator();
-        while(itr.hasNext()) {
-            node_data v = itr.next();
-            Iterator<edge_data> iter = g.getE(v.getKey()).iterator();
-            while(iter.hasNext()) {
-                edge_data e = iter.next();
-                boolean f = isOnEdge(pokemon.getLocation(), e,pokemon.getType(), g);
-                if(f) {
-                    pokemon.set_edge(e);
-                }
-            }
+        while (po.compareTo((geoLocation)nodes.get(i).getLocation()) > 0){
+            i++;
         }
+        while (po.compareTo((geoLocation)nodes.get(j).getLocation()) < 0){
+            j--;
+        }
+
+        //TODO finish find edge
+//
+//        edge_data pEdge = g.getEdge(nodes.get(i).getKey(),nodes.get(j).getKey());
+//        pokemon.set_edge(pEdge);
+
     }
+
+
+
 
     private static boolean isOnEdge(geo_location p, geo_location src, geo_location dest ) {
 

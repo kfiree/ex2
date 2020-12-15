@@ -108,7 +108,7 @@ class DS_DWGraphTest {
             assertAll(
                     () -> assertNull(g.getEdge(0, -1), "one of nodes not in graph"),
                     () -> assertNull(emptyg.getEdge(0, 0), "empty graph"),
-                    () -> assertNotNull(g.getEdge(s.getKey(), s.getKey()), "itself")
+                    () -> assertNull(g.getEdge(s.getKey(), s.getKey()), "itself")
             );
             if (e == null) {
                 assertNotNull(g.getEdge(s.getKey()+1, s.getKey()));

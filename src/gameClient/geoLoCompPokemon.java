@@ -14,11 +14,8 @@ public class geoLoCompPokemon implements Comparator<CL_Pokemon> {
     @Override
     public int compare(CL_Pokemon o1, CL_Pokemon o2) {
 
-        geo_location g_1 = o1.getLocation();
-        geo_location g_2 = o2.getLocation();
-
-        geoLocation g1 = (geoLocation)g_1;
-        geoLocation g2 = (geoLocation)g_2;
+        geoLocation g1 = o1.getLocation();
+        geoLocation g2 = o2.getLocation();
 
         return g1.compareTo(g2);
 

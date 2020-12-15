@@ -3,11 +3,12 @@
  */
 package gameClient.util;
 
+import api.geoLocation;
 import api.geo_location;
 
 import java.io.Serializable;
 
-public class Point3D implements geo_location, Serializable{
+public class Point3D extends geoLocation implements geo_location, Serializable{
 	private static final long serialVersionUID = 1L;
 	/**
      * Simple set of constants - should be defined in a different class (say class Constants).*/

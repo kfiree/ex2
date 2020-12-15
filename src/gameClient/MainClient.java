@@ -221,60 +221,67 @@ public class MainClient  implements Runnable{
             for (int i = 0; i < pokemons.size(); i++) {
                 Arena.updateEdge(pokemons.get(i), g);
             }
-
-            Comparator cmp = new geoLoCompPokemon();
-            CL_Pokemon minP =  Collections.min(pokemons , cmp);
-            CL_Pokemon maxp= Collections.max(pokemons , cmp);
-
-            Collections.sort(pokemons);
-            geoLocation firsAxes = new geoLocation(0, 0, 0);
-
-            double min = minP.getLocation().distance(firsAxes);
-            double max = maxp.getLocation().distance(firsAxes);
-            double rang = ((max-min)/agentsNum)+min;
-
-            ArrayList <CL_Pokemon> pStartWith = new ArrayList<>();
-
-            int i =0;
-            while (rang-min < max){
-                while(i != pokemons.size()/2) {
-                    CL_Pokemon curr = pokemons.get(i);
-                    if (curr.getLocation().distance(minP.getLocation()) < rang) {
-                        pStartWith.add(curr);
-                        rang += min;
-                        i=0;
-                    }
-                    else {
-                        i++;
-                    }
+            for (int a = 0; a < agentsNum; a++) {
+                int ind = a % pokemons.size();
+                CL_Pokemon c = pokemons.get(ind);
+                int nn = c.get_edge().getDest();
+                if (c.getType() < 0) {
+                    nn = c.get_edge().getSrc();
                 }
-                if (i > 0){
-                    rang += min;
-                    i=0;
-                }
-            }
-            i=0;
-            int size = pStartWith.size();
-            while (size < agentsNum){
-                CL_Pokemon curr = pokemons.get(i);
-                if (! pStartWith.contains(curr)){
-                    pStartWith.add(curr);
-                    size++;
-                }
-                i++;
+//
+//            Comparator cmp = new geoLoCompPokemon();
+//            CL_Pokemon minP =  Collections.min(pokemons , cmp);
+//            CL_Pokemon maxp= Collections.max(pokemons , cmp);
+//
+//            Collections.sort(pokemons);
+//            geoLocation firsAxes = new geoLocation(0, 0, 0);
+//
+//            double min = minP.getLocation().distance(firsAxes);
+//            double max = maxp.getLocation().distance(firsAxes);
+//            double rang = ((max-min)/agentsNum)+min;
+//
+//            ArrayList <CL_Pokemon> pStartWith = new ArrayList<>();
+//
+//            int i =0;
+//            while (rang-min < max){
+//                while(i != pokemons.size()/2) {
+//                    CL_Pokemon curr = pokemons.get(i);
+//                    if (curr.getLocation().distance(minP.getLocation()) < rang) {
+//                        pStartWith.add(curr);
+//                        rang += min;
+//                        i=0;
+//                    }
+//                    else {
+//                        i++;
+//                    }
+//                }
+//                if (i > 0){
+//                    rang += min;
+//                    i=0;
+//                }
+//            }
+//            i=0;
+//            int size = pStartWith.size();
+//            while (size < agentsNum){
+//                CL_Pokemon curr = pokemons.get(i);
+//                if (! pStartWith.contains(curr)){
+//                    pStartWith.add(curr);
+//                    size++;
+//                }
+//                i++;
+//            }
+//
+//            for (int j = 0; j < agentsNum; j++) {
+//                CL_Pokemon startDest = pStartWith.get(j);
+//                int nodeStart = startDest.getSrc();
+//                game.addAgent(nodeStart);
             }
 
-            for (int j = 0; j < agentsNum; j++) {
-                CL_Pokemon startDest = pStartWith.get(j);
-                int nodeStart = startDest.getSrc();
-                game.addAgent(nodeStart);
+                arena.setPokemons(pokemons);
+
+            } catch(JSONException e){
+                e.printStackTrace();
             }
 
-            arena.setPokemons(pokemons);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-
-    }
 }

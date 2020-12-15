@@ -55,11 +55,8 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
     public edge_data getEdge(int src, int dest) {
 
-        if (nodes.get(src) != null) {
+        if (nodes.get(src) != null && src!=dest) {
 
-            if (src == dest){
-              return new edge(src, dest, 0);
-            }
             return edgesFromNode.get(src).get(dest);
         }
         return null;
