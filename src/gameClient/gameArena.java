@@ -111,11 +111,14 @@ public class gameArena {
        List <node_data> nodes = new LinkedList<>();
        nodes.addAll(n);
 
-        Comparator cmp = new geoLoComp();
+        Comparator cmp = new geoLoCompNode();
         Collections.sort(nodes, cmp);
 
         int i=0;
         int j = nodes.size();
+
+        
+
         double pDistFromNodes = (pokemon.getLocation().distance(nodes.get(i).getLocation())) + (pokemon.getLocation().distance(nodes.get(j).getLocation()));
         double nodesDist = nodes.get(i).getLocation().distance(nodes.get(j).getLocation());
 

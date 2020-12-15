@@ -2,7 +2,6 @@ package gameClient;
 
 import Server.Game_Server_Ex2;
 import api.*;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -223,7 +222,7 @@ public class MainClient  implements Runnable{
                 Arena.updateEdge(pokemons.get(i), g);
             }
 
-            Comparator cmp = new geoLoComp();
+            Comparator cmp = new geoLoCompPokemon();
             CL_Pokemon minP =  Collections.min(pokemons , cmp);
             CL_Pokemon maxp= Collections.max(pokemons , cmp);
 
@@ -270,7 +269,7 @@ public class MainClient  implements Runnable{
                 int nodeStart = startDest.getSrc();
                 game.addAgent(nodeStart);
             }
-            
+
             arena.setPokemons(pokemons);
 
         } catch (JSONException e) {
