@@ -278,7 +278,9 @@ public class CL_Agent {
 	}
 
 	public void setPath(List<node_data> path, node_data dest) {
-		path.add(dest);
+		if(dest!=null) {
+			path.add(dest);
+		}
 		this.path = path;
 	}
 
