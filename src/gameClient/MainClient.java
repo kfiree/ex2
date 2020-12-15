@@ -36,7 +36,6 @@ public class MainClient  implements Runnable{
         while(game.isRunning()) {
 
             moveAgents(game, g);
-            game.move();
             try {
                 gameWindow.repaint();
                 Thread.sleep(sleepTime);
@@ -202,7 +201,10 @@ public class MainClient  implements Runnable{
             //TODO maybe check dist to dest instead
             if(edge!=null){
                 double distToPokemon = ga.shortestPathDist(agent.getSrcNode(), pokemon.get_edge().getSrc());
-                double huntValue = pokemon.getValue() / distToPokemon;
+                double huntValue=0;
+                if(agent.getSpeed()>0) {
+                    huntValue = pokemon.getValue() / (distToPokemon / agent.getSpeed());
+                }
 
                 pokemonQueue.add(new PokemonEntry(huntValue, pokemon));
                 //TODO set agent Queue
@@ -331,7 +333,7 @@ public class MainClient  implements Runnable{
                 CL_Pokemon startDest = pStartWith.get(j);
                 int nodeStart = startDest.getSrc();
                 game.addAgent(nodeStart);
-//                game.addAgent(22); //test
+//                game.addAgent(1); //test
             }
 
 
