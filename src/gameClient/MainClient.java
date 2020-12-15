@@ -56,12 +56,10 @@ public class MainClient  implements Runnable{
     private static void moveAgents(game_service game, directed_weighted_graph g) {
         //set agents
         String updatedArena = game.move();
-        List<CL_Agent> agentList = Arena.getAgents(updatedArena, g);
+        List<CL_Agent> agentList = arena.getAgents(updatedArena, g);
+//        List<CL_Agent> agents = arena.getAgents();
         arena.setAgents(agentList);
 
-        //set pokemons
-        List<CL_Pokemon> pokemons = Arena.json2Pokemons(game.getPokemons());
-        arena.setPokemons(pokemons);
 
         for(int i=0;i<agentList.size();i++) {
             CL_Agent agent = agentList.get(i);
@@ -70,11 +68,11 @@ public class MainClient  implements Runnable{
             int src = agent.getSrcNode();
 
             if(dest==-1) {
-                dest = nextNode(g, agent);
                 calculateAgentsPath(game, agent);
+                dest = nextNode(g, agent);
                 if(agent.path!=null){
 
-                    game.chooseNextEdge(i, agent.path.get(0).getKey());
+                    game.chooseNextEdge(i, dest);
 
                     System.out.println("Agent: "+agent.getID()+", val: "+agent.getValue()+"   turned to node: "+agent.getNextNode());
                 }
@@ -119,14 +117,14 @@ public class MainClient  implements Runnable{
 
     private static int nextNode(directed_weighted_graph g, CL_Agent agent) {
         List<node_data> path = agent.getPath();
-        if(path!=null){
-            if(!path.isEmpty()) {
-                if (agent.getSrcNode() == path.get(0).getKey()) {
-                    path.remove(0);
-                }
-
-                return path.get(0).getKey();
+        if(path!=null && !path.isEmpty()){
+            node_data nextNode;
+            if (agent.getSrcNode() == path.get(0).getKey()) {
+                nextNode = path.remove(0);
+            }else{
+                nextNode = path.get(0);
             }
+            return nextNode.getKey();
         }
         return -1;
     }
@@ -140,12 +138,9 @@ public class MainClient  implements Runnable{
         ga.init(g);
 
         List<CL_Pokemon> pokemons = arena.getPokemons();
-        List<CL_Agent> agents = arena.getAgents();
+
         PriorityQueue<PokemonEntry> pokemonQueue = agent.getPokemonsVal();
-//        init(game);
-        for (int a = 0; a < pokemons.size(); a++) {
-            Arena.updateEdge(pokemons.get(a), g);
-        }
+
         for (CL_Pokemon pokemon : pokemons) {
 
             edge_data edge = pokemon.get_edge();
@@ -158,44 +153,46 @@ public class MainClient  implements Runnable{
                 //TODO set agent Queue
             }
         }
+        LinkedList<CL_Agent> agentsList  = new LinkedList<>();
+        agentsList.add(agent);
 
-        List<CL_Agent> hAgents = arena.getAgents();
-        Iterator<CL_Agent> itr = hAgents.iterator();
-        while(itr.hasNext()){
+        while(!agentsList.isEmpty()){
             //TODO check if already on the hunt
-            CL_Agent iAgent = itr.next();
+            CL_Agent iAgent = agentsList.removeFirst();
             PokemonEntry pEntry = agent.getPokemonsVal().poll();
-            if(pEntry!=null) {
+
+            if (pEntry != null) {
 
                 CL_Pokemon pokemon = pEntry.getPokemon();
 
                 if (pokemon.persecutedBy == -1) {
-                    iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()));
-                    hAgents.remove(iAgent);
+                    iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()), g.getNode(pokemon.get_edge().getDest()));
                 } else {
                     double value = iAgent.getPokemonsVal().peek().getValue();
-                    CL_Agent currAgentAfter = agents.get(pokemon.getPersecutedBy());
+                    CL_Agent currAgentAfter = arena.getAgents().get(pokemon.getPersecutedBy());
+                    double thisHuntValue = iAgent.getPokemonsVal().peek().getValue();
+                    double otherHuntValue = currAgentAfter.getPokemonsVal().peek().getValue();
                     //if new agent have better hunt Value
-                    if (currAgentAfter.getPokemonsVal().peek().getValue() < iAgent.getPokemonsVal().peek().getValue()) {
+                    if (otherHuntValue < thisHuntValue) {
                         //clear old
                         currAgentAfter.getPokemonsVal().poll();
-                        hAgents.add(currAgentAfter);
+                        agentsList.add(currAgentAfter);
+
                         //set new persecuted
-                        iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()));
-                        hAgents.remove(iAgent);
+                        iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()), g.getNode(pokemon.get_edge().getDest()));
                     } else {
                         //if this agent have worst huntVal then sent him to another pokemon
                         iAgent.getPokemonsVal().poll();
                         //sent agent to the end of list
-                        hAgents.remove(iAgent);
-                        hAgents.add(iAgent);
+                        agentsList.add(iAgent);
                     }
                 }
 
             }
-        }
-    }
 
+        }
+
+    }
 
     private static void init (game_service game){
 
@@ -205,12 +202,11 @@ public class MainClient  implements Runnable{
 
         arena = new Arena();
         arena.setGraph(g);
-        arena.setPokemons(Arena.json2Pokemons(pokemonString));
+//        arena.setPokemons(Arena.json2Pokemons(pokemonString));
         gameWindow = new window("test Ex2");
         gameWindow.setSize(1000, 700);
         gameWindow.panel.update(arena);
         gameWindow.panel.setTimeLeft(game.timeToEnd());
-
 
         gameWindow.show();
         String info = game.toString();
@@ -274,10 +270,12 @@ public class MainClient  implements Runnable{
                 int nodeStart = startDest.getSrc();
                 game.addAgent(nodeStart);
             }
-
+            
+            arena.setPokemons(pokemons);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 }

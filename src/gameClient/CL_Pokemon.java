@@ -11,7 +11,7 @@ public class CL_Pokemon implements  Comparable<CL_Pokemon>{
 	private Point3D _pos;
 	private double min_dist;
 	private int min_ro;
-	int persecutedBy;
+	int persecutedBy = -1;
 	double tag;
 	int src;
 	//TODO add who persecuted for switching
