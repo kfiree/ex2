@@ -56,13 +56,18 @@ public class MainClient  implements Runnable{
     }
 
     private static void moveAgents(game_service game, directed_weighted_graph g) {
-        //set agents
         game.move();
+
+
+        //set agents
         String agentsString = game.getAgents();
         List<CL_Agent> agentList = arena.getAgents(agentsString, g);
-//        List<CL_Agent> agents = arena.getAgents();
         arena.setAgents(agentList);
 
+        //set pokemons
+        String pokemonsJ = game.getPokemons();
+        ArrayList<CL_Pokemon> pokemons = Arena.json2Pokemons(pokemonsJ);
+        arena.setPokemons(pokemons);
 
         for(int i=0;i<agentList.size();i++) {
             CL_Agent agent = agentList.get(i);
@@ -71,7 +76,6 @@ public class MainClient  implements Runnable{
             int src = agent.getSrcNode();
 
             if(nextNode==-1) {
-                flagNewPath = true;
                 calculateAgentsPath(game, agent);
                 if(agent.path!=null){
                     nextNode = getNextNode(g, agent);
@@ -86,49 +90,8 @@ public class MainClient  implements Runnable{
             game.move();
             System.out.println("Agent: "+agent.getID()+", val: "+agent.getValue()+"   turned to node: "+agent.getNextNode());
         }
-        if(flagNewPath){
-            flagNewPath = false;
-        }
     }
-//    public static List<CL_Agent> json2agents (game_service game){
-//
-//        JSONObject jsonObj;
-//        List<CL_Agent> agents = new ArrayList<>();
-//        try {
-//            jsonObj = new JSONObject(game.getAgents());
-//            JSONArray agentsJsonObj = jsonObj.getJSONArray("Agents");
-//
-//            for(int i=0;i<agentsJsonObj.length();i++) {
-//                JSONObject agentJsonObj= agentsJsonObj.getJSONObject(i);
-//                int key = agentJsonObj.getInt("id");
-//                double value =agentJsonObj.getDouble("value");
-//                int src = agentJsonObj.getInt("src");
-//                int dest = agentJsonObj.getInt("dest");
-//                double speed = agentJsonObj.getDouble("speed");
-//
-//                String POS = agentJsonObj.getString("pos");
-//                String [] XY = POS.split(",");
-//                double x = Double.parseDouble(XY[0]);
-//                double y = Double.parseDouble(XY[1]);
-//                geoLocation pos = new geoLocation (x,y,0);
-//                CL_Agent agent = new CL_Agent();
-//                n.setLocation(pos);
-//                g.addNode(n);
-//            }
-//
-//            for(int i=0;i<edgeJsonObj.length();i++) {
-//                JSONObject edge_dataObj = edgeJsonObj.getJSONObject(i);
-//                int src = edge_dataObj.getInt("src");
-//                int dest = edge_dataObj.getInt("dest");
-//                double w = edge_dataObj.getDouble("w");
-//                g.connect(src, dest, w);
-//            }
-//        }
-//        catch(Exception e) {
-//            e.printStackTrace();
-//        }
-//        return g;
-//    }
+
     public static DS_DWGraph json2graph (game_service game){
 
         JSONObject jsonObj;
@@ -171,13 +134,7 @@ public class MainClient  implements Runnable{
         if(path!=null && !path.isEmpty()){
             node_data nextNode = path.remove(0);
             agent.setPath(path, null);
-//            if (agent.getSrcNode() == path.get(0).getKey()) {
-//                nextNode = path.remove(0);
-//                //TODO add setpath status
-//                agent.setPath(path, null);
-//            }else{
-//                nextNode = path.get(0);
-//            }
+
             return nextNode.getKey();
         }
         return -1;
@@ -191,7 +148,11 @@ public class MainClient  implements Runnable{
         dw_graph_algorithms ga = new Algo_DWGraph();
         ga.init(g);
 
-        List<CL_Pokemon> pokemons = arena.getPokemons();
+        String pokemonsString = game.getPokemons();
+        List<CL_Pokemon> pokemons = arena.json2Pokemons(pokemonsString);
+        for (int i = 0; i < pokemons.size(); i++) {
+            Arena.updateEdge(pokemons.get(i), g);
+        }
 
         PriorityQueue<PokemonEntry> pokemonQueue = agent.getPokemonsVal();
 
@@ -283,7 +244,6 @@ public class MainClient  implements Runnable{
             line = new JSONObject(info);
             JSONObject gameServerJ = line.getJSONObject("GameServer");
             int agentsNum = gameServerJ.getInt("agents");
-            int src_node = 0;  // arbitrary node, you should start at one of the pokemon
 
             List<CL_Pokemon> pokemons = Arena.json2Pokemons(game.getPokemons());
 
