@@ -11,8 +11,7 @@ import java.util.*;
 public class MainClient  implements Runnable{
     private static window gameWindow;
     private static Arena arena;
-    private static int movesCounter;
-    private static boolean flagNewPath;
+    private boolean loggedIn;
 
     public static void main(String[] a) {
         Thread client = new Thread(new MainClient());
@@ -22,36 +21,38 @@ public class MainClient  implements Runnable{
     @Override
     public void run() {
         // choose a game out of 24 games available [0,23]
-        int scenario_num = 11;
+        int scenario_num = 23;
         game_service game = Game_Server_Ex2.getServer(scenario_num);
 
+
         directed_weighted_graph g = json2graph(game);
+
+        gameWindow = new window("Kfir&Tehila's Arena", game);
+        gameWindow.setSize(1000, 700);
 
         init(game);
 
         game.startGame();
 
-        long sleepTime=80;
+        long sleepTime = 80;
 
-        while(game.isRunning()) {
+        while (game.isRunning()) {
 
             moveAgents(game, g);
             try {
                 gameWindow.repaint();
                 Thread.sleep(sleepTime);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        double FinalScore=0;
-        for(CL_Agent agent: arena.getAgents()){
+        double FinalScore = 0;
+        for (CL_Agent agent : arena.getAgents()) {
             FinalScore += agent.getValue();
         }
 
-        System.out.println("Final Score is - "+FinalScore+".");
+        System.out.println("Final Score is - " + FinalScore + ".");
         System.out.println(" game string - " + game.toString());
-        System.out.println( movesCounter +" moves has been made");
         System.exit(0);
     }
 
@@ -226,18 +227,18 @@ public class MainClient  implements Runnable{
     private static void init (game_service game){
 
         String pokemonString = game.getPokemons();
-//        directed_weighted_graph g = game.getJava_Graph_Not_to_be_used();
         directed_weighted_graph g = json2graph(game);
 
         arena = new Arena();
         arena.setGraph(g);
-//        arena.setPokemons(Arena.json2Pokemons(pokemonString));
-        gameWindow = new window("test Ex2");
-        gameWindow.setSize(1000, 700);
-        gameWindow.panel.update(arena);
-        gameWindow.panel.setTimeLeft(game.timeToEnd());
 
+
+
+//        if(!gameWindow.isLoggedIn())
+//        arena.setPokemons(Arena.json2Pokemons(pokemonString));
+        gameWindow.panel.update(arena);
         gameWindow.show();
+
         String info = game.toString();
         JSONObject line;
         try {
@@ -292,8 +293,8 @@ public class MainClient  implements Runnable{
             for (int j = 0; j < agentsNum; j++) {
                 CL_Pokemon startDest = pStartWith.get(j);
                 int nodeStart = startDest.getSrc();
-                game.addAgent(nodeStart);
-//                game.addAgent(1); //test
+//                game.addAgent(nodeStart);
+                game.addAgent(1); //test
             }
 
 
