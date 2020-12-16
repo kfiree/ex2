@@ -267,18 +267,18 @@ public class MainClient  implements Runnable{
 
             int i =0;
 
-                while( i<pokemons.size() && i != agentsNum ) {
-                    CL_Pokemon curr = pokemons.get(i);
-                    if (curr.getLocation().distance(minP.getLocation()) < rang+min) {
-                        pStartWith.add(curr);
-                        rang += rang;
-                        pokemons.remove(i);
-                        i++;
-                    }
-                    else {
-                        i++;
-                    }
+            while( i<pokemons.size() && i != agentsNum ) {
+                CL_Pokemon curr = pokemons.get(i);
+                if (curr.getLocation().distance(minP.getLocation()) < rang+min) {
+                    pStartWith.add(curr);
+                    rang += rang;
+                    pokemons.remove(i);
+                    i++;
                 }
+                else {
+                    i++;
+                }
+            }
 
             i=0;
             int size = pStartWith.size();
