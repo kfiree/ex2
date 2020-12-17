@@ -48,19 +48,26 @@ public class MainClient  implements Runnable{
         for(CL_Agent agent: arena.getAgents()){
             FinalScore += agent.getValue();
         }
+
         System.out.println("Final Score is - "+FinalScore+".");
+        System.out.println(" game string - " + game.toString());
         System.out.println( movesCounter +" moves has been made");
         System.exit(0);
     }
 
     private static void moveAgents(game_service game, directed_weighted_graph g) {
+        game.move();
+
+
         //set agents
-//        String updatedArena = game.move();
         String agentsString = game.getAgents();
         List<CL_Agent> agentList = arena.getAgents(agentsString, g);
-//        List<CL_Agent> agents = arena.getAgents();
         arena.setAgents(agentList);
 
+        //set pokemons
+        String pokemonsJ = game.getPokemons();
+        ArrayList<CL_Pokemon> pokemons = Arena.json2Pokemons(pokemonsJ);
+        arena.setPokemons(pokemons);
 
         for(int i=0;i<agentList.size();i++) {
             CL_Agent agent = agentList.get(i);
@@ -69,11 +76,12 @@ public class MainClient  implements Runnable{
             int src = agent.getSrcNode();
 
             if(nextNode==-1) {
-                flagNewPath = true;
                 calculateAgentsPath(game, agent);
                 if(agent.path!=null){
                     nextNode = getNextNode(g, agent);
-
+                    if(src==nextNode){
+                        nextNode = getNextNode(g, agent);
+                    }
                     game.chooseNextEdge(i, nextNode);
                     game.move();
 
@@ -82,49 +90,8 @@ public class MainClient  implements Runnable{
             game.move();
             System.out.println("Agent: "+agent.getID()+", val: "+agent.getValue()+"   turned to node: "+agent.getNextNode());
         }
-        if(flagNewPath){
-            flagNewPath = false;
-        }
     }
-//    public static List<CL_Agent> json2agents (game_service game){
-//
-//        JSONObject jsonObj;
-//        List<CL_Agent> agents = new ArrayList<>();
-//        try {
-//            jsonObj = new JSONObject(game.getAgents());
-//            JSONArray agentsJsonObj = jsonObj.getJSONArray("Agents");
-//
-//            for(int i=0;i<agentsJsonObj.length();i++) {
-//                JSONObject agentJsonObj= agentsJsonObj.getJSONObject(i);
-//                int key = agentJsonObj.getInt("id");
-//                double value =agentJsonObj.getDouble("value");
-//                int src = agentJsonObj.getInt("src");
-//                int dest = agentJsonObj.getInt("dest");
-//                double speed = agentJsonObj.getDouble("speed");
-//
-//                String POS = agentJsonObj.getString("pos");
-//                String [] XY = POS.split(",");
-//                double x = Double.parseDouble(XY[0]);
-//                double y = Double.parseDouble(XY[1]);
-//                geoLocation pos = new geoLocation (x,y,0);
-//                CL_Agent agent = new CL_Agent();
-//                n.setLocation(pos);
-//                g.addNode(n);
-//            }
-//
-//            for(int i=0;i<edgeJsonObj.length();i++) {
-//                JSONObject edge_dataObj = edgeJsonObj.getJSONObject(i);
-//                int src = edge_dataObj.getInt("src");
-//                int dest = edge_dataObj.getInt("dest");
-//                double w = edge_dataObj.getDouble("w");
-//                g.connect(src, dest, w);
-//            }
-//        }
-//        catch(Exception e) {
-//            e.printStackTrace();
-//        }
-//        return g;
-//    }
+
     public static DS_DWGraph json2graph (game_service game){
 
         JSONObject jsonObj;
@@ -167,13 +134,7 @@ public class MainClient  implements Runnable{
         if(path!=null && !path.isEmpty()){
             node_data nextNode = path.remove(0);
             agent.setPath(path, null);
-//            if (agent.getSrcNode() == path.get(0).getKey()) {
-//                nextNode = path.remove(0);
-//                //TODO add setpath status
-//                agent.setPath(path, null);
-//            }else{
-//                nextNode = path.get(0);
-//            }
+
             return nextNode.getKey();
         }
         return -1;
@@ -187,7 +148,11 @@ public class MainClient  implements Runnable{
         dw_graph_algorithms ga = new Algo_DWGraph();
         ga.init(g);
 
-        List<CL_Pokemon> pokemons = arena.getPokemons();
+        String pokemonsString = game.getPokemons();
+        List<CL_Pokemon> pokemons = arena.json2Pokemons(pokemonsString);
+        for (int i = 0; i < pokemons.size(); i++) {
+            Arena.updateEdge(pokemons.get(i), g);
+        }
 
         PriorityQueue<PokemonEntry> pokemonQueue = agent.getPokemonsVal();
 
@@ -197,7 +162,10 @@ public class MainClient  implements Runnable{
             //TODO maybe check dist to dest instead
             if(edge!=null){
                 double distToPokemon = ga.shortestPathDist(agent.getSrcNode(), pokemon.get_edge().getSrc());
-                double huntValue = pokemon.getValue() / distToPokemon;
+                double huntValue=0;
+                if(agent.getSpeed()>0) {
+                    huntValue = pokemon.getValue() / (distToPokemon / agent.getSpeed());
+                }
 
                 pokemonQueue.add(new PokemonEntry(huntValue, pokemon));
                 //TODO set agent Queue
@@ -207,6 +175,7 @@ public class MainClient  implements Runnable{
         agentsList.add(agent);
 
         while(!agentsList.isEmpty()){
+            //TODO calculate speed
             //TODO check if already on the hunt
             CL_Agent iAgent = agentsList.removeFirst();
             PokemonEntry pEntry = agent.getPokemonsVal().poll();
@@ -214,17 +183,22 @@ public class MainClient  implements Runnable{
             if (pEntry != null) {
 
                 CL_Pokemon pokemon = pEntry.getPokemon();
-
+                double thisHuntValue = pEntry.getValue();
                 if (pokemon.persecutedBy == -1) {
                     List<node_data> pathToPSrc = ga.shortestPath(iAgent.getSrcNode(), pokemon.getSrc());
                     //TODO tehila add pokemon.getDest
                     node_data dest = g.getNode(pokemon.get_edge().getDest());
                     iAgent.setPath(pathToPSrc, dest);
+                    pokemon.setPersecutedBy(iAgent.getID());
+                    iAgent.setHuntValue(thisHuntValue);
                 } else {
-                    double value = iAgent.getPokemonsVal().peek().getValue();
+                    if(iAgent.getPokemonsVal().isEmpty()){
+
+                    }
                     CL_Agent currAgentAfter = arena.getAgents().get(pokemon.getPersecutedBy());
-                    double thisHuntValue = iAgent.getPokemonsVal().peek().getValue();
-                    double otherHuntValue = currAgentAfter.getPokemonsVal().peek().getValue();
+
+                    double otherHuntValue = currAgentAfter.getHuntValue();
+
                     //if new agent have better hunt Value
                     if (otherHuntValue < thisHuntValue) {
                         //clear old
@@ -233,6 +207,8 @@ public class MainClient  implements Runnable{
 
                         //set new persecuted
                         iAgent.setPath(ga.shortestPath(iAgent.getSrcNode(), pokemon.get_edge().getSrc()), g.getNode(pokemon.get_edge().getDest()));
+                        pokemon.setPersecutedBy(iAgent.getID());
+                        iAgent.setHuntValue(thisHuntValue);
                     } else {
                         //if this agent have worst huntVal then sent him to another pokemon
                         iAgent.getPokemonsVal().poll();
@@ -268,7 +244,6 @@ public class MainClient  implements Runnable{
             line = new JSONObject(info);
             JSONObject gameServerJ = line.getJSONObject("GameServer");
             int agentsNum = gameServerJ.getInt("agents");
-            int src_node = 0;  // arbitrary node, you should start at one of the pokemon
 
             List<CL_Pokemon> pokemons = Arena.json2Pokemons(game.getPokemons());
 
@@ -291,18 +266,18 @@ public class MainClient  implements Runnable{
 
             int i =0;
 
-                while( i<pokemons.size() && i != agentsNum ) {
-                    CL_Pokemon curr = pokemons.get(i);
-                    if (curr.getLocation().distance(minP.getLocation()) < rang+min) {
-                        pStartWith.add(curr);
-                        rang += rang;
-                        pokemons.remove(i);
-                        i++;
-                    }
-                    else {
-                        i++;
-                    }
+            while( i<pokemons.size() && i != agentsNum ) {
+                CL_Pokemon curr = pokemons.get(i);
+                if (curr.getLocation().distance(minP.getLocation()) < rang+min) {
+                    pStartWith.add(curr);
+                    rang += rang;
+                    pokemons.remove(i);
+                    i++;
                 }
+                else {
+                    i++;
+                }
+            }
 
             i=0;
             int size = pStartWith.size();
@@ -318,6 +293,7 @@ public class MainClient  implements Runnable{
                 CL_Pokemon startDest = pStartWith.get(j);
                 int nodeStart = startDest.getSrc();
                 game.addAgent(nodeStart);
+//                game.addAgent(1); //test
             }
 
 

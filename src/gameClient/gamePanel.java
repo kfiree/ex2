@@ -16,34 +16,26 @@ import java.util.List;
 
 public class gamePanel extends JPanel {
     private long timeLeft;
-    private int _ind;
-    private Arena _ar;
+    private Arena arena;
     private gameClient.util.Range2Range _w2f;
-    private boolean didThatalready = false, doneThat;
 
     gamePanel(){
     }
 
     public void update(Arena ar) {
-        this._ar = ar;
+        this.arena = ar;
         updateFrame();
     }
 
     private void updateFrame() {
-
-        double i = 0.0;
         Range rx = new Range(20,this.getWidth()-20);
         Range ry = new Range(this.getHeight()-10,150);
         Range2D frame = new Range2D(rx,ry);
-        directed_weighted_graph g = _ar.getGraph();
+        directed_weighted_graph g = arena.getGraph();
         _w2f = Arena.w2f(g,frame);
     }
     public void
     paint(Graphics g) {
-
-        int w = this.getWidth();
-        int h = this.getHeight();
-//        g.clearRect(0, 0, w, h);
         g.setFont(new Font("MV Boli", Font.BOLD,15));
 
         updateFrame();
@@ -51,26 +43,26 @@ public class gamePanel extends JPanel {
         drawGraph(g);
         drawPokemons(g);
         drawAgents(g);
-//        drawInfo(g);
+        drawInfo(g);
 
     }
-//    private void drawInfo(Graphics g) {
-//        java.util.List<String> str = _ar.get_info();
-//        String dt = "none";
-//        for(int i=0;i<str.size();i++) {
-//            g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
-//        }
-//
-//    }
+    private void drawInfo(Graphics g) {
+        java.util.List<String> str = arena.get_info();
+        String dt = "none";
+        for(int i=0;i<str.size();i++) {
+            g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
+        }
+
+    }
 
     private void drawProgressBarAndTitle(Graphics g){
         int currValue=0;
-        for(CL_Agent a: _ar.getAgents()){
+        for(CL_Agent a: arena.getAgents()){
             currValue+= a.getValue();
         }
 
         int totalValue = currValue;
-        for(CL_Pokemon p: _ar.getPokemons()){
+        for(CL_Pokemon p: arena.getPokemons()){
             totalValue += p.getValue();
         }
 
@@ -91,7 +83,7 @@ public class gamePanel extends JPanel {
     }
 
     private void drawGraph(Graphics g) {
-        directed_weighted_graph gg = _ar.getGraph();
+        directed_weighted_graph gg = arena.getGraph();
         Iterator<node_data> iter = gg.getV().iterator();
         while(iter.hasNext()) {
             node_data n = iter.next();
@@ -106,20 +98,22 @@ public class gamePanel extends JPanel {
         }
     }
     private void drawPokemons(Graphics g) {
-        List<CL_Pokemon> fs = _ar.getPokemons();
+        List<CL_Pokemon> pokemons = arena.getPokemons();
+
+        ImageIcon pokemonIcon;
         ImageIcon yellowPokemon = new ImageIcon("pikachu.png");
         ImageIcon greenPokemon = new ImageIcon("bulbasaur.png");
-        ImageIcon pokemonIcon = yellowPokemon;
-        if(fs!=null) {
-            Iterator<CL_Pokemon> itr = fs.iterator();
+
+        if(pokemons!=null) {
+            Iterator<CL_Pokemon> itr = pokemons.iterator();
 
             while(itr.hasNext()) {
                 CL_Pokemon pokemon = itr.next();
-
                 Point3D point = pokemon.getLocation();
                 int r=10;
+
                 g.setColor(Color.green);
-//                if(pokemon.getType()<0) {g.setColor(Color.orange);}
+
                 if(point!=null) {
                     geo_location pokemonLocation = this._w2f.world2frame(point);
 
@@ -129,19 +123,18 @@ public class gamePanel extends JPanel {
                         pokemonIcon = yellowPokemon;
                     }
                     g.drawImage(pokemonIcon.getImage(), (int) pokemonLocation.x() - r, (int) pokemonLocation.y() - r, 2 * r + 5, 2 * r + 5, this);
+
                     g.setFont(new Font("Wide Latin", Font.BOLD,15));
                     g.setColor(new Color(0x890808));
                     g.drawString(new DecimalFormat(".#").format(pokemon.getValue()) + "", (int)pokemonLocation.x()-2*r, (int)pokemonLocation.y()-r);
-                    g.setFont(new Font("MV Boli", Font.BOLD,15));
-//                  g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
 
+                    g.setFont(new Font("MV Boli", Font.BOLD,15));
                 }
             }
-            didThatalready = true;
         }
     }
     private void drawAgents(Graphics g) {
-        List<CL_Agent> agentsList = _ar.getAgents();
+        List<CL_Agent> agentsList = arena.getAgents();
         ImageIcon ashImg = new ImageIcon("ash.png");
 //        Iterator<OOP_Point3D> itr = rs.iterator();
         g.setColor(Color.red);
@@ -178,7 +171,7 @@ public class gamePanel extends JPanel {
     }
     private void drawEdge(edge_data e, Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
-        directed_weighted_graph gg = _ar.getGraph();
+        directed_weighted_graph gg = arena.getGraph();
         geo_location s = gg.getNode(e.getSrc()).getLocation();
         geo_location d = gg.getNode(e.getDest()).getLocation();
         geo_location s0 = this._w2f.world2frame(s);
