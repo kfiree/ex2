@@ -259,6 +259,8 @@ public class CL_Agent {
 		this.set_sg_dt(ddt);
 	}
 
+	//			s---a----d
+
 	public edge_data get_curr_edge() {
 		return this._curr_edge;
 	}
