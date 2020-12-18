@@ -114,7 +114,7 @@ public class Ex2_Client implements Runnable{
 		_ar = new Arena();
 		_ar.setGraph(g);
 		_ar.setPokemons(Arena.json2Pokemons(fs));
-		_win = new window("test Ex2");
+		_win = new window("test Ex2", null);
 		_win.setSize(1000, 700);
 		_win.panel.update(_ar);
 //		_win.gamePanel.update(_ar);

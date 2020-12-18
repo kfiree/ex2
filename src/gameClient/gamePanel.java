@@ -1,9 +1,6 @@
 package gameClient;
 
-import api.directed_weighted_graph;
-import api.edge_data;
-import api.geo_location;
-import api.node_data;
+import api.*;
 import gameClient.util.Point3D;
 import gameClient.util.Range;
 import gameClient.util.Range2D;
@@ -14,12 +11,14 @@ import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 
-public class gamePanel extends JPanel {
-    private long timeLeft;
+public class gamePanel extends JPanel{
     private Arena arena;
     private gameClient.util.Range2Range _w2f;
+    private game_service game;
 
-    gamePanel(){
+
+    gamePanel(game_service game){
+        this.game=game;
     }
 
     public void update(Arena ar) {
@@ -31,11 +30,13 @@ public class gamePanel extends JPanel {
         Range rx = new Range(20,this.getWidth()-20);
         Range ry = new Range(this.getHeight()-10,150);
         Range2D frame = new Range2D(rx,ry);
+
         directed_weighted_graph g = arena.getGraph();
         _w2f = Arena.w2f(g,frame);
+
     }
-    public void
-    paint(Graphics g) {
+
+    public void paint(Graphics g) {
         g.setFont(new Font("MV Boli", Font.BOLD,15));
 
         updateFrame();
@@ -44,8 +45,29 @@ public class gamePanel extends JPanel {
         drawPokemons(g);
         drawAgents(g);
         drawInfo(g);
-
     }
+
+//    private void drawTextField(Graphics g){
+//        button = new JButton("Login");
+//        button.addActionListener(this);
+//        textField = new JTextField();
+//        textField.setPreferredSize(new Dimension(250, 40));
+//
+//        this.add(textField);
+//
+//    }
+
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        try {
+//            int userID = Integer.parseInt(textField.getText());
+//            game.login(userID);
+//            arena.setLoggedIn(true);
+//        } catch (NumberFormatException nfe) {
+//            //TODO add error message
+//        }
+//    }
+
     private void drawInfo(Graphics g) {
         java.util.List<String> str = arena.get_info();
         String dt = "none";
@@ -76,6 +98,7 @@ public class gamePanel extends JPanel {
         bar.setForeground(Color.red);
         this.add(bar);
         g.setColor(Color.white);
+        int timeLeft = ((int)game.timeToEnd())/1000;
         bar.setString("Time left for game " + timeLeft );
 //        bar.setString("Value of " + currValue + "Pokemons have been captured out of " + totalValue);
         bar.setValue(currValue);
@@ -180,9 +203,5 @@ public class gamePanel extends JPanel {
         g2D.setStroke(new BasicStroke(4));
         g2D.drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
         //	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
-    }
-
-    public void setTimeLeft(long timeLeft) {
-        this.timeLeft = timeLeft;
     }
 }

@@ -14,7 +14,7 @@ public class MyFrame extends JFrame{
 
     public MyFrame(String a){
         super(a);
-        panel = new gamePanel();
+        panel = new gamePanel(null);
         this.add(panel);
     }
 }
