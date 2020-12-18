@@ -22,7 +22,7 @@ public class Ex2_Client implements Runnable{
 
 	@Override
 	public void run() {
-		int scenario_num = 11;
+		int scenario_num = 0;
 		game_service game = Game_Server_Ex2.getServer(scenario_num); // you have [0,23] games
 
 //		DS_DWGraph g = new DS_DWGraph();
@@ -114,7 +114,7 @@ public class Ex2_Client implements Runnable{
 		_ar = new Arena();
 		_ar.setGraph(g);
 		_ar.setPokemons(Arena.json2Pokemons(fs));
-		_win = new window("test Ex2", null);
+		_win = new window("test Ex2", game);
 		_win.setSize(1000, 700);
 		_win.panel.update(_ar);
 //		_win.gamePanel.update(_ar);

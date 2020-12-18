@@ -105,4 +105,13 @@ public class CL_Pokemon implements  Comparable<CL_Pokemon>{
 		}
 		return 0;
 	}
+
+	//TODO check value?
+	//TODO use EPS?
+	public boolean sameAs(CL_Pokemon other){
+		if(_value == other.getValue()) {
+			return getLocation().equals(other.getLocation());
+		}
+		return false;
+	}
 }

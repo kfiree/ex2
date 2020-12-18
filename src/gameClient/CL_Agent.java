@@ -7,32 +7,36 @@ import api.node_data;
 import gameClient.util.Point3D;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
 public class CL_Agent {
+	//static vars
 	public static final double EPS = 0.0001;
 	private static int _count = 0;
 	private static int _seed = 3331;
+
+	//agents properties
 	private int _id;
-	//	private long _key;
 	private geo_location _pos;
 	private double _speed;
 	private edge_data _curr_edge;
 	private node_data _curr_node;
-	private directed_weighted_graph _gg;
+	private directed_weighted_graph g;
 	private CL_Pokemon _curr_fruit;
 	private long _sg_dt;
-	private double huntValue;
-	List<node_data> path;
-	private double _value;
-	PriorityQueue<PokemonEntry> pokemonsVal = new PriorityQueue<>();
+	private double huntVal;
+	List<node_data> path = new ArrayList<>();
+	private double _val;
+	PriorityQueue<PokemonEntry> pokemonQueue = new PriorityQueue<>();
+	PokemonEntry nextTarget;
+	edge_data targetEdge;
 
-
-	public CL_Agent(directed_weighted_graph g, int start_node) {
-		_gg = g;
+	public CL_Agent(directed_weighted_graph graph, int start_node) {
+		g = graph;
 		setMoney(0);
-		this._curr_node = _gg.getNode(start_node);
+		this._curr_node = g.getNode(start_node);
 		_pos = _curr_node.getLocation();
 		_id = -1;
 		setSpeed(0);
@@ -51,12 +55,12 @@ public class CL_Agent {
 				Point3D pp = new Point3D(p);
 				int src = ttt.getInt("src");
 				int dest = ttt.getInt("dest");
-				double value = ttt.getDouble("value");
+				double val = ttt.getDouble("value");
 				this._pos = pp;
 				this.setCurrNode(src);
 				this.setSpeed(speed);
 				this.setNextNode(dest);
-				this.setMoney(value);
+				this.setMoney(val);
 			}
 		}
 		catch(Exception e) {
@@ -69,7 +73,7 @@ public class CL_Agent {
 		int d = this.getNextNode();
 		String ans = "{\"Agent\":{"
 				+ "\"id\":"+this._id+","
-				+ "\"value\":"+this._value+","
+				+ "\"value\":"+this._val+","
 				+ "\"src\":"+this._curr_node.getKey()+","
 				+ "\"dest\":"+d+","
 				+ "\"speed\":"+this.getSpeed()+","
@@ -78,12 +82,12 @@ public class CL_Agent {
 				+ "}";
 		return ans;
 	}
-	private void setMoney(double v) {_value = v;}
+	private void setMoney(double v) {_val = v;}
 
 	public boolean setNextNode(int dest) {
 		boolean ans = false;
 		int src = this._curr_node.getKey();
-		this._curr_edge = _gg.getEdge(src, dest);
+		this._curr_edge = g.getEdge(src, dest);
 		if(_curr_edge!=null) {
 			ans=true;
 		}
@@ -91,7 +95,7 @@ public class CL_Agent {
 		return ans;
 	}
 	public void setCurrNode(int src) {
-		this._curr_node = _gg.getNode(src);
+		this._curr_node = g.getNode(src);
 	}
 	public boolean isMoving() {
 		return this._curr_edge!=null;
@@ -116,7 +120,7 @@ public class CL_Agent {
 
 	public double getValue() {
 		// TODO Auto-generated method stub
-		return this._value;
+		return this._val;
 	}
 
 	//TODO might use synchronized
@@ -240,15 +244,15 @@ public class CL_Agent {
 	public void set_SDT(long ddtt) {
 		long ddt = ddtt;
 		if(this._curr_edge!=null) {
-			double w = get_curr_edge().getWeight();
-			geo_location dest = _gg.getNode(get_curr_edge().getDest()).getLocation();
-			geo_location src = _gg.getNode(get_curr_edge().getSrc()).getLocation();
-			double de = src.distance(dest);
-			double dist = _pos.distance(dest);
+			double w = _curr_edge.getWeight();
+			geo_location destLocation = g.getNode(_curr_edge.getDest()).getLocation();
+			geo_location srcLocation = g.getNode(_curr_edge.getSrc()).getLocation();
+			double edgeLength = srcLocation.distance(destLocation);
+			double agent2dest = _pos.distance(destLocation);	//dist to end of edge
 			if(this.get_curr_fruit().get_edge()==this.get_curr_edge()) {
-				dist = _curr_fruit.getLocation().distance(this._pos);
+				agent2dest = _curr_fruit.getLocation().distance(this._pos);
 			}
-			double norm = dist/de;
+			double norm = agent2dest/edgeLength;
 			double dt = w*norm / this.getSpeed();
 			ddt = (long)(1000.0*dt);
 		}
@@ -266,34 +270,45 @@ public class CL_Agent {
 	}
 
 	public double getHuntValue() {
-		return huntValue;
+		return huntVal;
 	}
 
 	public void setHuntValue(double huntValue) {
-		this.huntValue = huntValue;
+		this.huntVal = huntValue;
 	}
 
-	public void set_value(double _value) {
-		this._value = _value;
+	public void set_val(double _val) {
+		this._val = _val;
 	}
 
 	public List<node_data> getPath() {
 		return path;
 	}
 
-	public void setPath(List<node_data> path, node_data dest) {
-		if(dest!=null) {
-			path.add(dest);
-		}
+	public void resetPath() {
+		path.clear();
+		this.huntVal = 0;
+	}
+
+	public void setPath(List<node_data> path) {
 		this.path = path;
 	}
 
-	public PriorityQueue<PokemonEntry> getPokemonsVal() {
-		return pokemonsVal;
+	public PriorityQueue<PokemonEntry> getPokemonQueue() {
+		return pokemonQueue;
 	}
 
-	public void setPokemonsVal(PriorityQueue<PokemonEntry> pokemonsVal) {
-		this.pokemonsVal = pokemonsVal;
+	public void setPokemonQueue(PriorityQueue<PokemonEntry> pokemonQueue) {
+		this.pokemonQueue = pokemonQueue;
 	}
+
+	public void addToQueue(CL_Pokemon p, double pValue) {
+		pokemonQueue.add(new PokemonEntry(pValue, p));
+	}
+
+	public PokemonEntry pollTarget(){
+		return pokemonQueue.poll();
+	}
+
 
 }
