@@ -8,6 +8,7 @@ import gameClient.util.Range2D;
 import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class gamePanel extends JPanel{
     private Arena arena;
     private gameClient.util.Range2Range _w2f;
     private game_service game;
-
+    private static ArrayList<Integer> targets= new ArrayList<>();
 
     gamePanel(game_service game){
         this.game=game;
@@ -41,10 +42,11 @@ public class gamePanel extends JPanel{
 
         updateFrame();
 
+        drawInfo(g);
+        drawProgressBarAndTitle(g);
         drawGraph(g);
         drawPokemons(g);
         drawAgents(g);
-        drawInfo(g);
     }
 
 //    private void drawTextField(Graphics g){
@@ -79,7 +81,13 @@ public class gamePanel extends JPanel{
 
     private void drawProgressBarAndTitle(Graphics g){
         int currValue=0;
-        for(CL_Agent a: arena.getAgents()){
+
+        List<CL_Agent> agents = arena.getAgents();
+        if(agents==null){
+            return;
+        }
+
+        for(CL_Agent a: agents){
             currValue+= a.getValue();
         }
 
@@ -149,38 +157,55 @@ public class gamePanel extends JPanel{
 
                     g.setFont(new Font("Wide Latin", Font.BOLD,15));
                     g.setColor(new Color(0x890808));
-                    g.drawString(new DecimalFormat(".#").format(pokemon.getValue()) + "", (int)pokemonLocation.x()-2*r, (int)pokemonLocation.y()-r);
+                    g.drawString(new DecimalFormat(".#").format(pokemon.getValue()) + ", huntedBy "+ pokemon.getPersecutedBy(), (int)pokemonLocation.x()-2*r, (int)pokemonLocation.y()-r);
 
                     g.setFont(new Font("MV Boli", Font.BOLD,15));
                 }
             }
         }
     }
+
     private void drawAgents(Graphics g) {
         List<CL_Agent> agentsList = arena.getAgents();
+        if(agentsList==null){
+            return;
+        }
+
         ImageIcon ashImg = new ImageIcon("ash.png");
-//        Iterator<OOP_Point3D> itr = rs.iterator();
         g.setColor(Color.red);
 
-        int i=0;
-        while(agentsList!=null && i<agentsList.size()) {
+        int agentsNum = agentsList.size();
+        int targetsSize = targets.size();
+        for(int i=targetsSize; i<agentsNum;i++){
+            targets.add(-1);
+        }
+
+        int r=8;
+        for(int i=0; i<agentsNum;i++){
             CL_Agent agent = agentsList.get(i);
             geo_location agentLocation = agent.getLocation();
-            int r=8;
-            i++;
-            if(agentLocation!=null) {
 
-                drawProgressBarAndTitle(g);
+            if(agentLocation!=null) {
                 geo_location fp = this._w2f.world2frame(agentLocation);
                 g.drawImage(ashImg.getImage(), (int)fp.x()-r, (int)fp.y()-r,4*r, 4*r, this);
                 g.setColor(new Color(0x000000));
 
-                g.drawString(agent.getID() + ": to-" + agent.getNextNode() + " from- " + agent.getSrcNode() , (int)fp.x()-50, (int)fp.y()-2*r);
+                String path="";
+                List<node_data> list = agent.getPath();
+                if(list.size()>0) {
+                    int lastNodeID = (list.get(list.size() - 1)).getKey();
+                        if(lastNodeID>0) {
+                            targets.set(i, lastNodeID);
+                            path = list.toString();
+                        }
+                }
+
+//                g.drawString(agent.getID() + ": to-" + agent.getNextNode() + " from- " + agent.getSrcNode() , (int)fp.x()-50, (int)fp.y()-2*r);
+                g.drawString(agent.getID() + " => " + targets.get(i), (int)fp.x()-50, (int)fp.y()-2*r);
                 g.setFont(new Font("Wide Latin", Font.BOLD,15));
                 g.setColor(new Color(0x890808));
                 g.drawString(new DecimalFormat(".#").format(agent.getValue()) + "", (int)fp.x()-20, (int)fp.y()+4*r);
                 g.setFont(new Font("MV Boli", Font.BOLD,15));
-                //                g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
             }
         }
     }
