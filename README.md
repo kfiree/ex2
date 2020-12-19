@@ -1,6 +1,6 @@
 
 ## `Welcome to OOP_Ex2 `
-##### **made by:** `Kfir Etinfer & Tehila Ben Kalifa`
+##### **made by:** `Kfir Etinger & Tehila Ben Kalifa`
 
 
 ### **About:**
