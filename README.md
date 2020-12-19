@@ -58,17 +58,19 @@
 
 #### `gameClient packege`
 
-> `CL_Pokemon`- represents the set of operations applicable on a pokemons in the game
+> - `CL_Pokemon`- represents the set of operations applicable on a pokemons in the game
 
-> `CL_Agent` - represents the set of operations applicable on a agent that grabs pokemons in the game
+> - `CL_Agent` - represents the set of operations applicable on a agent that grabs pokemons in the game
 
-> `Arena`- represents the Arena of the game
+> - `Arena`- represents the Arena of the game
 
-> `gamePanel`-
+> - `gamePanel`-
 
-> `window`-
+> - `window`-
 
-> `Ex2`- the main class of running the game
+> - `Ex2`- the main class of running the game
+
+
 
 
 
