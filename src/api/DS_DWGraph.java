@@ -89,8 +89,8 @@ public class  DS_DWGraph implements  directed_weighted_graph{
                 modeCounter++;
             }
             //add new edge to edges
-            edge_data newEdge = new edge(src, dest, w);
-            edge_data oppositNewEdge = new edge(dest, src, w);
+            edge_data newEdge = new edgeData(src, dest, w);
+            edge_data oppositNewEdge = new edgeData(dest, src, w);
             this.edgesFromNode.get(src).put(dest, newEdge);
             this.edgesToNode.get(dest).put(src, oppositNewEdge);
         }
@@ -213,13 +213,13 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
 
 
-    private class edge implements edge_data{
+    private class edgeData implements edge_data{
         private int src, dest, tag;
         private double w;
         private String info;
 
         //empty constructor
-        public edge() {
+        public edgeData() {
             this.src = 0;
             this.dest = 0;
             this.tag = 0;
@@ -228,7 +228,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         }
 
         //copy constructor
-        public edge(edge_data other) {
+        public edgeData(edge_data other) {
             this.src = other.getSrc();
             this.dest = other.getDest();
             this.w = other.getWeight();
@@ -236,7 +236,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
             this.tag = other.getTag();
         }
 
-        public edge(int src, int dest, double weight) {
+        public edgeData(int src, int dest, double weight) {
 
             if (weight >0) {
                 //edge from node to itself
@@ -257,7 +257,7 @@ public class  DS_DWGraph implements  directed_weighted_graph{
             if (!( o instanceof edge_data)){
                 return false;
             }
-            edge_data e = (edge) o;
+            edge_data e = (edgeData) o;
             return this.src== e.getSrc() && this.dest == e.getDest() && this.w == e.getWeight();
         }
 

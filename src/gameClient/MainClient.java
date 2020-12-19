@@ -34,16 +34,16 @@ public class MainClient  implements Runnable {
 
         init(game);
 
-        game.login(311611677);
+        game.login(207404567);
         game.startGame();
 
-        long sleepTime = 120;
+        long sleepTime = 115;
 
         while(game.isRunning()) {
-            synchronized (Thread.currentThread()) {
+//            synchronized (Thread.currentThread()) {
                 game.move();
                 moveAgents(game, g);
-            }
+//            }
             try {
                 gameWindow.repaint();
                 Thread.sleep(sleepTime);
