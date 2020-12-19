@@ -39,35 +39,35 @@
 
 ### **Structure:**
 #### `api packege`
-
+>
 > - `nodeData`- represents the set of operations applicable on a node (vertex) in  directional weighted graph.
-
+>
 > - `geoLocation`- represents a geo location <x,y,z>, on graph
-
+>
 > - `inner edgeData`- represents the set of operations applicable on a directional edge(src,dest) in directional weighted graph.
-
+>
 > - `DS_DWGraph`- represents a directional weighted graph. 
-
-   The graph implementation relies on using Hash Map - which supports Delete, Get, Insert and Collection of the values in the Hash - all in O(1).
-
+>
+ >The graph implementation relies on using Hash Map - which supports Delete, Get, Insert and Collection of the values in the Hash - all in O(1).
+>
 > - `Algo_DWGraph`-  represents a directed  Weighted Graph Theory Algorithms
-
-  The implementation relies on using BFS, Kosaraju and Dijkstra's algorithms
+>
+ > The implementation relies on using BFS, Kosaraju and Dijkstra's algorithms
 
  
 
 #### `gameClient packege`
-
+>
 > - `CL_Pokemon`- represents the set of operations applicable on a pokemons in the game
-
+>
 > - `CL_Agent` - represents the set of operations applicable on a agent that grabs pokemons in the game
-
+>
 > - `Arena`- represents the Arena of the game
-
+>
 > - `gamePanel`-
-
+>
 > - `window`-
-
+>
 > - `Ex2`- the main class of running the game
 
 
