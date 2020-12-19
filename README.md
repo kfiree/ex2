@@ -1,10 +1,10 @@
-
-
-#`Welcome to OOP_Ex2 `
+# `Welcome to OOP_Ex2 `
 ##### **made by:** `Kfir Etinfer & Tehila Ben Kalifa`
+__________________________________________________________________
 
 
-###**About:**
+### **About:**
+
 - *The first part of this project implements unidirectional weighted graph.*    
 *for more reading- https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)*
 
@@ -13,9 +13,8 @@
 *the pokemons have different value. the main goal is to catch most pokemons whith high value during the allotted time.*
 *The player can choose levels from 24 different game levels rising difficulty.*
 
-
-
-###**Using:**
+  
+### **Using:**
 
 - *git clone this repository to a suitable folder*
 
@@ -34,12 +33,12 @@
      java -jar Ex2.jar <YOUR ID> <LEVEL>
      ```
   
-  ####`Or:` 
+  #### `Or:` 
    *in the main window of the game- `Enter your ID and Select level`, after fill the details click the `Play`* 
   
 
-###**Structure:**
-####`api packege`
+### **Structure:**
+#### `api packege`
 
 > - `nodeData`- represents the set of operations applicable on a node (vertex) in  directional weighted graph.
 
@@ -57,7 +56,7 @@
 
  
 
-####`gameClient packege`
+#### `gameClient packege`
 
 > `CL_Pokemon`- represents the set of operations applicable on a pokemons in the game
 
