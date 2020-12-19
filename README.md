@@ -74,7 +74,6 @@
 
 
 
-### *Read more about the project in our `wiki`* - 
-    https://github.com/kfiree/ex2/wiki
+### *Read more about the project in our [Wiki](https://github.com/kfiree/ex2/wiki)* - 
 
 
