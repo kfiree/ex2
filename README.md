@@ -1,10 +1,6 @@
-<<<<<<< HEAD
+
 # `Welcome to OOP_Ex2 `
-=======
 
-#`Welcome to OOP_Ex2 `
-
->>>>>>> c611e50685a00695c8cda145e2b28314d42b4751
 ##### **made by:** `Kfir Etinfer & Tehila Ben Kalifa`
 __________________________________________________________________
 
