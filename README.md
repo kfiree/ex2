@@ -5,7 +5,7 @@
 
 ### **About:**
 
-- *The first part of this project implements unidirectional weighted graph.*    
+- *The first part of this project implements directional weighted graph.*    
 *for more reading- https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)*
 
 - *The second part of this project implements the **"pokemons game"**-*
