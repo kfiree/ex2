@@ -10,7 +10,7 @@
 
 - *The second part of this project implements the **"pokemons game"**-*
 *the game based on unidirectional weighted graph and the pokemons scatterd on the graph edges randomly.*
-*the pokemons have different value. the main goal is to catch most pokemons whith high value during the allotted time.*
+*the pokemons have different value. the main goal is to catch most pokemons with high value during the allotted time.*
 *The player can choose levels from 24 different game levels rising difficulty.*
 
   
@@ -38,7 +38,7 @@
   
 
 ### **Structure:**
-#### `api packege`
+#### `[api packege](https://github.com/kfiree/ex2/wiki/Api-Structure)`
 >
 > - `nodeData`- represents the set of operations applicable on a node (vertex) in  directional weighted graph.
 >
@@ -56,7 +56,7 @@
 
  
 
-#### `gameClient packege`
+#### `[gameClient packege](https://github.com/kfiree/ex2/wiki/gameClient-Structer)`
 >
 > - `CL_Pokemon`- represents the set of operations applicable on a pokemons in the game
 >
