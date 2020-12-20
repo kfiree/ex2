@@ -31,18 +31,18 @@
     $ git clone https://github.com/kfiree/ex2.git
     ```
 
-- *run the Ex2.jar*
-
-    ```
-    $ java -jar Ex2
-    ```
-- *enter your ID and number of level from 0-23 you want to play*
-
+- *run the Ex2.jar, enter your ID and number of level from 0-23 you want to play*
+- *the jar need to be at same folder as data folder*
      ```
     $ java -jar Ex2.jar <YOUR ID> <LEVEL>
      ```
   
   #### `Or:` 
+  - *run the Ex2.jar
+  - *the jar need to be at same folder as data folder*
+    ```
+    $ java -jar Ex2.jar
+    ```
    *in the main window of the game- `Enter your ID and Select level`, after fill the details click the `Play`* 
   
 
