@@ -38,7 +38,7 @@
   
 
 ### **Structure:**
-#### `[api packege](https://github.com/kfiree/ex2/wiki/Api-Structure)`
+#### *[api packege](https://github.com/kfiree/ex2/wiki/Api-Structure)*
 >
 > - `nodeData`- represents the set of operations applicable on a node (vertex) in  directional weighted graph.
 >
@@ -56,7 +56,7 @@
 
  
 
-#### `[gameClient packege](https://github.com/kfiree/ex2/wiki/gameClient-Structer)`
+#### *[gameClient packege](https://github.com/kfiree/ex2/wiki/gameClient-Structer)*
 >
 > - `CL_Pokemon`- represents the set of operations applicable on a pokemons in the game
 >
