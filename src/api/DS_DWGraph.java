@@ -4,7 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Collection;
 import java.util.HashMap;
-
+/**
+ * This class represents a directional weighted graph.
+ * The gtaph support a large number of nodes (over 100,000).
+ * The graph implementation relies on using Hash Map represent the nodes of graph
+ * and another Hash Map represent the edges of graph
+ */
 public class  DS_DWGraph implements  directed_weighted_graph{
 
     //TODO add equals overRide for tests
@@ -18,13 +23,18 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
 
     private int modeCounter, edgeCounter;
-    //empty constructor
+
+    /**
+     * empty constructor
+     */
     public DS_DWGraph() {
         this.modeCounter =0;
         this.edgeCounter =0;
     }
 
-    //copy constructor
+    /**
+     * copy constructor
+     */
     public DS_DWGraph(directed_weighted_graph other) {
         //set graph's nodes
         Collection<node_data> oNodes = other.getV();
@@ -45,14 +55,20 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         this.modeCounter = other.getMC();
         this.edgeCounter = other.edgeSize();
     }
-
+    /**
+     * returns the node_data by the node_id,
+     * @param key - the node_id
+     * @return the node_data by the node_id, null if none.
+     */
     @Override
     public node_data getNode(int key) {
         return nodes.get(key);
     }
-
+    /**
+     * returns the data of the edge (src,dest), null if none.
+     * Note: this method should run in O(1) time.
+     */
     @Override
-
     public edge_data getEdge(int src, int dest) {
 
         if (nodes.get(src) != null && src!=dest) {
@@ -61,20 +77,31 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         }
         return null;
     }
-
+    /**
+     * adds a new node to the graph with the given node_data.
+     * Note: this method should run in O(1) time.
+     */
     @Override
     public void addNode(node_data node) {
         //TODO check if edges.set is safe (what if key bigger then nodes
         //TODO check edges.set if node exist
+        int size = nodes.size();
         if(node!=null && nodes.get(node.getKey()) == null) {
             nodes.put(node.getKey(), node);
             edgesFromNode.put(node.getKey(), new HashMap<>());
             edgesToNode.put(node.getKey(), new HashMap<>());
-            modeCounter++;
-
+            if (size != nodes.size()) {
+                modeCounter++;
+            }
         }
     }
-
+    /**
+     * Connects an edge with weight w between node src to node dest.
+     * * Note: this method should run in O(1) time.
+     * @param src - the source of the edge.
+     * @param dest - the destination of the edge.
+     * @param w - positive weight representing the cost (aka time, price, etc) between src-->dest.
+     */
     @Override
     public void connect(int src, int dest, double w) {
         //TODO split to 2 if for time save
@@ -96,12 +123,23 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         }
 
     }
-
+    /**
+     * This method returns a pointer (shallow copy) for the
+     * collection representing all the nodes in the graph.
+     * Note: this method should run in O(1) time.
+     * @return Collection(node_data)
+     */
     @Override
     public Collection<node_data> getV() {
         return nodes.values();
     }
-
+    /**
+     * This method returns a pointer (shallow copy) for the
+     * collection representing all the edges getting out of
+     * the given node (all the edges starting (source) at the given node).
+     * Note: this method should run in O(k) time, k being the collection size.
+     * @return Collection(edge_data)
+     */
     @Override
     public Collection<edge_data> getE(int node_id) {
         if (nodes.get(node_id) != null) {
@@ -113,8 +151,6 @@ public class  DS_DWGraph implements  directed_weighted_graph{
     /**
      * This method return collection representing all the edges getting in to
      * the given node (all the edges ending (dest) at the given node).
-     * @param node_id
-     * @return
      */
     public Collection<edge_data> getOppositE (int node_id) {
         if (nodes.get(node_id) != null) {
@@ -122,7 +158,12 @@ public class  DS_DWGraph implements  directed_weighted_graph{
         }
         return null;
     }
-
+    /**
+     * Deletes the node (with the given ID) from the graph -
+     * and removes all edges which starts or ends at this node.
+     * This method should run in O(k), V.degree=k, as all the edges should be removed.
+     * @return the data of the removed node (null if none).
+     */
     @Override
     public node_data removeNode(int key) {
 
@@ -157,7 +198,11 @@ public class  DS_DWGraph implements  directed_weighted_graph{
 
         return removedNode;
     }
-
+    /**
+     * Deletes the edge from the graph,
+     * Note: this method should run in O(1) time.
+     * @return the data of the removed edge (null if none).
+     */
     @Override
     public edge_data removeEdge(int src, int dest) {
 
@@ -192,19 +237,26 @@ public class  DS_DWGraph implements  directed_weighted_graph{
             }
         return true;
     }
-    
 
 
+    /** Returns the number of vertices (nodes) in the graph.
+     * Note: this method should run in O(1) time.
+     */
     @Override
     public int nodeSize() {
         return nodes.size();
     }
-
+    /**
+     * Returns the number of edges (assume directional graph).
+     * Note: this method should run in O(1) time.
+     */
     @Override
     public int edgeSize() {
         return edgeCounter;
     }
-
+    /**
+     * Returns the Mode Count - for testing changes in the graph.
+     */
     @Override
     public int getMC() {
         return modeCounter;

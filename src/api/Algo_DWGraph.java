@@ -9,10 +9,16 @@ import java.util.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * This class represents a directed Weighted Graph Theory Algorithms
+ * The implementation relies on using BFS, Kosaraju and Dijkstra's algorithms
+ */
 public class Algo_DWGraph implements dw_graph_algorithms {
 
     private directed_weighted_graph graph = new DS_DWGraph();
-
+    /**
+     * Init the graph on which this set of algorithms operates on.
+     */
     @Override
     public void init(directed_weighted_graph g) {
         if (g == null)
@@ -21,12 +27,16 @@ public class Algo_DWGraph implements dw_graph_algorithms {
             this.graph = g;
 
     }
-
+    /**
+     * Return the underlying graph of which this class works.
+     */
     @Override
     public directed_weighted_graph getGraph() {
         return this.graph;
     }
-
+    /**
+     * Compute a deep copy of this weighted graph.
+     */
     @Override
     public directed_weighted_graph copy() {
         return new DS_DWGraph(this.graph);
@@ -151,7 +161,12 @@ public class Algo_DWGraph implements dw_graph_algorithms {
     }
 
 
-
+    /**
+     * returns the length of the shortest path between src to dest
+     * Note: if no such path --> returns -1
+     * @param src - start node
+     * @param dest - end (target) node
+     */
     @Override
     public double shortestPathDist(int src, int dest) {
 
@@ -179,7 +194,14 @@ public class Algo_DWGraph implements dw_graph_algorithms {
         return -1;
 
     }
-
+    /**
+     * returns the the shortest path between src to dest - as an ordered List of nodes:
+     * src--> n1-->n2-->...dest
+     * see: https://en.wikipedia.org/wiki/Shortest_path_problem
+     * Note if no such path --> returns null;
+     * @param src - start node
+     * @param dest - end (target) node
+     */
     @Override
     public List<node_data> shortestPath(int src, int dest) {
 
@@ -313,7 +335,12 @@ public class Algo_DWGraph implements dw_graph_algorithms {
             n.setWeight(0);
         }
     }
-
+    /**
+     * Saves this weighted (directed) graph to the given
+     * file name - in JSON format
+     * @param file - the file name (may include a relative path).
+     * @return true - iff the file was successfully saved
+     */
     @Override
     public boolean save(String file) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -329,7 +356,14 @@ public class Algo_DWGraph implements dw_graph_algorithms {
         }
         return true;
     }
-
+    /**
+     * This method load a graph to this graph algorithm.
+     * if the file was successfully loaded - the underlying graph
+     * of this class will be changed (to the loaded one), in case the
+     * graph was not loaded the original graph should remain "as is".
+     * @param file - file name of JSON file
+     * @return true - iff the graph was successfully loaded.
+     */
     @Override
     public boolean load(String file) {
 

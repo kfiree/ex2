@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+/**
+ * This class represents the set of operations applicable on a agent that grabs pokemons in the game
+ */
 public class CL_Agent {
 	//static vars
 	public static final double EPS = 0.0001;

@@ -1,7 +1,9 @@
 package gameClient;
 
 import org.jetbrains.annotations.NotNull;
-
+/**
+ * This class
+ */
 public class PokemonEntry implements  Comparable<PokemonEntry> {
     private CL_Pokemon Pokemon;
     double Value;

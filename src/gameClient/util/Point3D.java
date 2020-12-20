@@ -7,7 +7,9 @@ import api.geoLocation;
 import api.geo_location;
 
 import java.io.Serializable;
-
+/**
+ * This class
+ */
 public class Point3D extends geoLocation implements geo_location, Serializable{
 	private static final long serialVersionUID = 1L;
 	/**

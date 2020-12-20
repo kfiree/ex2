@@ -4,6 +4,10 @@ import gameClient.util.Point3D;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+
+/**
+ * This class represents the set of operations applicable on a pokemons in the game
+ */
 public class CL_Pokemon implements  Comparable<CL_Pokemon>{
 	private edge_data _edge;
 	private double _value;

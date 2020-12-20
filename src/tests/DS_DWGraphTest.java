@@ -7,7 +7,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * This is a simple test class to test WGraph_DS and inner class nodeInfo
+ * the test checks functionality & performance
+ */
 class DS_DWGraphTest {
     //this function based on Graph_Ex0_Test2 graph_creator function
     public static directed_weighted_graph makeGraph(int v_size, int e_size, int seed) {
@@ -116,7 +119,12 @@ class DS_DWGraphTest {
                 assertNotNull(g.getEdge(s.getKey(), s.getKey()+1));
         }
     }
-
+    /**
+     * simple test fot addNode
+     * checks:
+     * insert new node and get him from graph
+     * add same key
+     */
     @Test
     void addNode() {
         if (itr.hasNext()) {
@@ -132,7 +140,14 @@ class DS_DWGraphTest {
 
         }
     }
-
+    /** simple test for connect two nodes with edge, w>=0
+     * check:
+     * connect with w<0
+     * connect with un exist node
+     * connect connected nodes with different w
+     * connect node to himself
+     * connect empty graph
+     */
     @Test
     void connect() {
         int size = g.edgeSize();
@@ -163,7 +178,11 @@ class DS_DWGraphTest {
             );
         }
     }
-
+    /**
+     * simple test for getV
+     * check:
+     * the collection size same as nodeSize
+     */
     @Test
     void getV() {
         directed_weighted_graph g1 = makeGraph(5,0,1) ;
@@ -176,6 +195,13 @@ class DS_DWGraphTest {
         assertTrue(N.isEmpty());
 
     }
+
+    /**
+     * simple test for getE
+     * checks:
+     * the na collection of Complete graph for each node
+     * the na collection of empty graph
+     */
     @Test
     void getE() {
         DS_DWGraph gg = (DS_DWGraph) fullg;
@@ -192,7 +218,13 @@ class DS_DWGraphTest {
          assertNull(emptyg.getE(0));
 
     }
-
+    /**
+     * simple test for removeNode
+     * check:
+     * remove from empty graph
+     * remove un exist node
+     * the removes node not exist in na collection
+     */
     @Test
     void removeNode() {
 
@@ -215,7 +247,13 @@ class DS_DWGraphTest {
 
         );
     }
-
+    /**
+     * simple test for removeEdge
+     * check:
+     * remove from empty graph
+     * remove edge from un exist node
+     * after remove, the na collection changed
+     */
     @Test
     void removeEdge() {
         Collection <node_data> G = fullg.getV();

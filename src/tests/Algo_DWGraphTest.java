@@ -12,7 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Algo_DWGraphTest {
 
-
+    /**
+     * This is a simple test class to test WGraph_Algo
+     * the test checks functionality & performance
+     */
     dw_graph_algorithms ga = new Algo_DWGraph();
     directed_weighted_graph g = DS_DWGraphTest.makeGraph(5, 20, 1);
     Collection<node_data> N = g.getV();
@@ -29,7 +32,12 @@ class Algo_DWGraphTest {
         g1 = new DS_DWGraph();
         emptyg = new DS_DWGraph();
     }
-
+    /**
+     * test for init
+     * checks:
+     * get by init the graph
+     * use shallow copy
+     */
     @Test
     void init() {
         ga.init(g);
@@ -45,7 +53,11 @@ class Algo_DWGraphTest {
         }
 
     }
-
+    /**
+     * test for getGraph
+     * check:
+     * the graph init and the graph getGraph are equals
+     */
     @Test
     void getGraph() {
         ga.init(g);
@@ -53,7 +65,12 @@ class Algo_DWGraphTest {
         assertEquals(g, g1);
     }
 
-
+    /**
+     * test for copy
+     * checks:
+     * copy two graphs by deep copy
+     * copy empty graphs
+     */
     @Test
     void copy() {
         ga.init(g);
@@ -73,7 +90,14 @@ class Algo_DWGraphTest {
         }
     }
 
-
+    /**
+     * test for isConnected
+     * checks:
+     * empty graph - is connected
+     * graph with only one node - is connected
+     * Complete graph - is connected
+     * insert new node to  Complete graph - not connected
+     */
     @Test
     void isConnected() {
         ga.init(g);
@@ -98,7 +122,13 @@ class Algo_DWGraphTest {
         assertTrue(ga.isConnected(), "init- after connect nodes");
 
     }
-
+    /**
+     * test for shortestPathDist
+     * checks:
+     * empty graph
+     * path with node not exist
+     * shortestPathDist change if w changes
+     */
     @Test
     void shortestPathDist() {
         ga.init(g1);
@@ -149,7 +179,14 @@ class Algo_DWGraphTest {
 
     }
 
-
+    /**
+     * test for shortestPath
+     * checks:
+     * empty graph
+     * path with node not exist
+     * the list nodes have same refer with graph nodes
+     * the last node.tag in list = path
+     */
     @Test
     void shortestPath() {
 
@@ -176,9 +213,14 @@ class Algo_DWGraphTest {
             assertEquals(checkKey[i],n.getKey());
             i++;
         }
-
-
     }
+
+    /**
+     * test for save and load
+     * checks:
+     * save and load empty graph
+     * the load not change when init the graph
+     */
     @Test
     void saveAndLoad() {
         ga.init(g);

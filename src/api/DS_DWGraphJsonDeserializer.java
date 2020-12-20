@@ -4,6 +4,9 @@ import java.lang.reflect.Type;
 import java.util.Map.Entry;
 import java.util.Set;
 
+/**
+ * This class make Json Deserializ to graph
+ */
 public class DS_DWGraphJsonDeserializer implements JsonDeserializer<DS_DWGraph> {
 
     @Override

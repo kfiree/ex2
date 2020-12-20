@@ -44,7 +44,7 @@
 >
 > - `geoLocation`- represents a geo location <x,y,z>, on graph
 >
-> - `inner edgeData`- represents the set of operations applicable on a directional edge(src,dest) in directional weighted graph.
+> - `edgeData`- represents the set of operations applicable on a directional edge(src,dest) in directional weighted graph.
 >
 > - `DS_DWGraph`- represents a directional weighted graph. 
 >

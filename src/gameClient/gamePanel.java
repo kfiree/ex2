@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * This class
+ */
 public class gamePanel extends JPanel{
     private Arena arena;
     private gameClient.util.Range2Range _w2f;
