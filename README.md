@@ -43,7 +43,7 @@
     ```
     $ java -jar Ex2.jar
     ```
-   *in the main window of the game- `Enter your ID and Select level`, after fill the details click the `Play`* 
+   *in the main window of the game- `Enter your ID and Select level`, after fill the details click the `Login`* 
   
 
 ### **Structure:**
