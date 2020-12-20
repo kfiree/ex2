@@ -25,12 +25,12 @@
 - *run the Ex2.jar*
 
     ```
-    java -jar Ex2
+    $ java -jar Ex2
     ```
 - *enter your ID and number of level from 0-23 you want to play*
 
      ```
-     java -jar Ex2.jar <YOUR ID> <LEVEL>
+    $ java -jar Ex2.jar <YOUR ID> <LEVEL>
      ```
   
   #### `Or:` 
