@@ -9,58 +9,25 @@ import java.awt.event.ActionListener;
 /**
  * This class
  */
-public class window extends JFrame implements ActionListener {
-    gamePanel panel;
-    private boolean loggedIn;
-    private JButton button;
-    private JTextField textField;
-    private game_service game;
+public class window extends JFrame {
+    Component panel;
+//    JComponent panel;
 
-    public window(String name, game_service game) {
+    public window(String name) {
         //set frame
         super(name);
         this.setTitle(name);
         this.setBackground( new Color(0x1F7F1F));
         ImageIcon icon = new ImageIcon("icon.png");
         this.setIconImage(icon.getImage());
-        panel = new gamePanel(game);
-        this.add(panel);
-//        drawTextField();
-        this.game=game;
-    }
-    public boolean drawTextField(){
-        this.setLayout( new FlowLayout());
-
-        button = new JButton("Login");
-        button.addActionListener(this);
-
-        textField = new JTextField();
-        textField.setPreferredSize(new Dimension(250, 40));
-
-        this.add(button);
-        this.add(textField);
-
-        this.pack();
-        this.setVisible(true);
-        return true;
+//        panel = new gamePanel(game);
+//        this.add(panel);
+////        drawTextField();
+//        this.game=game;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == button) {
-//            panel = new gamePanel(game);
-            this.add(panel);
-            loggedIn = true;
-            try {
-                int userID = Integer.parseInt(textField.getText());
-                game.login(userID);
-            } catch (NumberFormatException nfe) {
-                //TODO add error message
-            }
-        }
-    }
+    public void setPanel(Component c) {
+        this.panel = c;
 
-    public boolean isLoggedIn() {
-        return loggedIn;
     }
 }

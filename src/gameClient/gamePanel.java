@@ -52,27 +52,6 @@ public class gamePanel extends JPanel{
         drawAgents(g);
     }
 
-//    private void drawTextField(Graphics g){
-//        button = new JButton("Login");
-//        button.addActionListener(this);
-//        textField = new JTextField();
-//        textField.setPreferredSize(new Dimension(250, 40));
-//
-//        this.add(textField);
-//
-//    }
-
-//    @Override
-//    public void actionPerformed(ActionEvent e) {
-//        try {
-//            int userID = Integer.parseInt(textField.getText());
-//            game.login(userID);
-//            arena.setLoggedIn(true);
-//        } catch (NumberFormatException nfe) {
-//            //TODO add error message
-//        }
-//    }
-
     private void drawInfo(Graphics g) {
         java.util.List<String> str = arena.get_info();
         String dt = "none";
@@ -98,6 +77,13 @@ public class gamePanel extends JPanel{
         for(CL_Pokemon p: arena.getPokemons()){
             totalValue += p.getValue();
         }
+        int timeLeft = ((int) game.timeToEnd())/10;
+        int secondsLeft = timeLeft/100;
+        int milloSecodnsLeft = timeLeft - secondsLeft*100;
+
+        g.drawString("User ID: "+ Ex2.getUserID(), 10, 20);
+        g.drawString("Level: "+ Ex2.getScenario_num(), 10, 40);
+        g.drawString("Time left: " + secondsLeft +":"+milloSecodnsLeft , 10, 60);
 
         ImageIcon headline = new ImageIcon("arena.png");
         g.drawImage(headline.getImage(), (this.getWidth()/2)-200, 10, 400, 45, this);
@@ -109,9 +95,8 @@ public class gamePanel extends JPanel{
         bar.setForeground(Color.red);
         this.add(bar);
         g.setColor(Color.white);
-        int timeLeft = ((int)game.timeToEnd())/1000;
-        bar.setString("Time left for game " + timeLeft );
-//        bar.setString("Value of " + currValue + "Pokemons have been captured out of " + totalValue);
+//        bar.setString("Time left for game " + timeLeft );
+        bar.setString("Value of " + currValue + "Pokemons have been captured out of " + totalValue);
         bar.setValue(currValue);
         this.add(bar);
     }

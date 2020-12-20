@@ -6,38 +6,46 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * This class represent the main class of running the game
  */
 public class Ex2 implements Runnable {
     private static window gameWindow;
+    private static gamePanel GamePanel;
+    private static welcomePanel welcomePanel;
     private static Arena arena;
-    private boolean loggedIn;
+    private static int scenario_num = 0;
+    private static int userID;
+    private static Thread client;
     private static List<CL_Pokemon> persecutedList = new ArrayList<>();
     private static HashMap<CL_Pokemon, Integer> targetsMap = new HashMap(); // HashMap<pokemon,purser.id>
 
     public static void main(String[] a) {
-        Thread client = new Thread(new Ex2());
-        client.start();
+
+        gameWindow = new window("Kfir&Tehila's Arena");
+        gameWindow.setSize(1000, 700);
+
+        welcomePanel = new welcomePanel();
+        gameWindow.getContentPane().add(welcomePanel);
+        gameWindow.setVisible(true);
     }
 
     @Override
     public void run() {
-        // choose a game out of 24 games available [0,23]
-        int scenario_num = 11;
-        game_service game = Game_Server_Ex2.getServer(scenario_num);
 
+        // choose a game out of 24 games available [0,23]
+        game_service game = Game_Server_Ex2.getServer(scenario_num);
 
         directed_weighted_graph g = json2graph(game);
 
-        gameWindow = new window("Kfir&Tehila's Arena", game);
-        gameWindow.setSize(1000, 700);
-
         init(game);
 
-        game.login(207404567);
+        game.login(userID);
         game.startGame();
 
         long sleepTime = 115;
@@ -89,13 +97,13 @@ public class Ex2 implements Runnable {
         ArrayList<CL_Pokemon> pokemons = Arena.json2Pokemons(pokemonsJ);
         arena.setPokemons(pokemons);
 
-        for (CL_Pokemon oldP : persecutedList) {
-            for (CL_Pokemon pokemon : pokemons) {
-                if (pokemon.getLocation().x() == oldP.getLocation().x() && pokemon.getLocation().y() == oldP.getLocation().y() && oldP.getPersecutedBy() != -1) {
-                    pokemon.setPersecutedBy(oldP.getPersecutedBy());
-                }
-            }
-        }
+//        for (CL_Pokemon oldP : persecutedList) {
+//            for (CL_Pokemon pokemon : pokemons) {
+//                if (pokemon.getLocation().x() == oldP.getLocation().x() && pokemon.getLocation().y() == oldP.getLocation().y() && oldP.getPersecutedBy() != -1) {
+//                    pokemon.setPersecutedBy(oldP.getPersecutedBy());
+//                }
+//            }
+//        }
         for (int i = 0; i < agentList.size(); i++) {
             CL_Agent agent = agentList.get(i);
             int id = agent.getID();
@@ -425,6 +433,9 @@ public class Ex2 implements Runnable {
         }
     }
 
+    private static void setNewPanel(){
+
+    }
     private static void init(game_service game){
 
         String pokemonString = game.getPokemons();
@@ -433,12 +444,16 @@ public class Ex2 implements Runnable {
         arena = new Arena();
         arena.setGraph(g);
 
-
+        gameWindow.setVisible(false);
+        gameWindow.getContentPane().removeAll();
+        GamePanel = new gamePanel(game);
+        GamePanel.update(arena);
+        gameWindow.getContentPane().add(GamePanel);
+        gameWindow.setVisible(true);
 
         //        if(!gameWindow.isLoggedIn())
         //        arena.setPokemons(Arena.json2Pokemons(pokemonString));
-        gameWindow.panel.update(arena);
-        gameWindow.show();
+
 
         String info = game.toString();
         JSONObject line;
@@ -500,13 +515,35 @@ public class Ex2 implements Runnable {
                 //                game.addAgent(1); //toDelete
             }
 
-
+//            List<CL_Agent> agentList = arena.getAgents(game.getAgents(), g);
+//            arena.setAgents(agentList);
             arena.setPokemons(pokemons);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public static void startThread(){
+        client = new Thread(new Ex2());
+        client.start();
+    }
+
+    public static int getUserID() {
+        return userID;
+    }
+
+    public static int getScenario_num() {
+        return scenario_num;
+    }
+
+    public static void setUserID(int userID) {
+        Ex2.userID = userID;
+    }
+
+    public static void setScenario_num(int scenario_num) {
+        Ex2.scenario_num = scenario_num;
     }
 }
 
