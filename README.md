@@ -8,6 +8,8 @@
 - *The first part of this project implements directional weighted graph.*    
 *for more reading- https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)*
 
+![](https://github.com/kfiree/ex2/blob/main/readmeGraph.PNG)
+
 - *The second part of this project implements the **"pokemons game"**-*
 *the game is based on an undirected weighted graph.*
 *In the game, the pokemons scatter on the graph edges randomly.*
