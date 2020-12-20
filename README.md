@@ -38,7 +38,7 @@
      ```
   
   #### `Or:` 
-  - *run the Ex2.jar
+  - *run the Ex2.jar*
   - *the jar need to be at same folder as data folder*
     ```
     $ java -jar Ex2.jar
