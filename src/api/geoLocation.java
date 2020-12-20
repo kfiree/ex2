@@ -8,9 +8,6 @@ import java.util.Comparator;
  * This class represents a geo location (x,y,z), aka Point3D
  */
 public class geoLocation implements geo_location,Comparable<geoLocation> {
-
-    //TODO check if initilaize needed
-    //TODO check if private or public
     public double x,y,z;
 
     /**

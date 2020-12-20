@@ -64,9 +64,11 @@
 >
 > - `Arena`- represents the Arena of the game
 >
-> - `gamePanel`-
+> - `gamePanel`- this panel contains all game's graphics
 >
-> - `window`-
+> - `welcomePanel`- this panel  contains the entry graphics
+> 
+> - `window`- a frame that contains gamePanel and welcomePanel
 >
 > - `Ex2`- the main class of running the game
 

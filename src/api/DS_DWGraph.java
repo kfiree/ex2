@@ -12,9 +12,6 @@ import java.util.HashMap;
  */
 public class  DS_DWGraph implements  directed_weighted_graph{
 
-    //TODO add equals overRide for tests
-    //TODO check for better mapping for edges
-
     @SerializedName("Nodes")
     private HashMap<Integer, node_data> nodes = new HashMap<>();
     @SerializedName("Edges")
@@ -83,8 +80,6 @@ public class  DS_DWGraph implements  directed_weighted_graph{
      */
     @Override
     public void addNode(node_data node) {
-        //TODO check if edges.set is safe (what if key bigger then nodes
-        //TODO check edges.set if node exist
         int size = nodes.size();
         if(node!=null && nodes.get(node.getKey()) == null) {
             nodes.put(node.getKey(), node);
@@ -104,7 +99,6 @@ public class  DS_DWGraph implements  directed_weighted_graph{
      */
     @Override
     public void connect(int src, int dest, double w) {
-        //TODO split to 2 if for time save
         if( (nodes.get(src)!=null) && (nodes.get(dest)!=null) && (src != dest) && (w>=0) ) {
             //if edge not exist
             if (getEdge(src, dest) == null) {

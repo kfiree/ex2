@@ -27,12 +27,22 @@ public class Ex2 implements Runnable {
 
     public static void main(String[] a) {
 
-        gameWindow = new window("Kfir&Tehila's Arena");
-        gameWindow.setSize(1000, 700);
+        if(a.length == 0) {
+            gameWindow = new window("Kfir&Tehila's Arena");
+            gameWindow.setSize(1000, 700);
 
-        welcomePanel = new welcomePanel();
-        gameWindow.getContentPane().add(welcomePanel);
-        gameWindow.setVisible(true);
+            welcomePanel = new welcomePanel();
+            gameWindow.getContentPane().add(welcomePanel);
+            gameWindow.setVisible(true);
+        }else{
+            try {
+                scenario_num = Integer.parseInt(a[1]);
+                userID = Integer.parseInt(a[0]);
+                startThread();
+            } catch (NumberFormatException nfe) {
+                System.out.println("Error. ID and Level number must be int.");
+            }
+        }
     }
 
     @Override
@@ -63,17 +73,6 @@ public class Ex2 implements Runnable {
             }
         }
 
-        //        for(CL_Agent agent: arena.getAgents()){
-        //        while (game.isRunning()) {
-        //
-        //            moveAgents(game, g);
-        //            try {
-        //                gameWindow.repaint();
-        //                Thread.sleep(sleepTime);
-        //            } catch (Exception e) {
-        //                e.printStackTrace();
-        //            }
-        //        }
         double FinalScore = 0;
         for (CL_Agent agent : arena.getAgents()) {
             FinalScore += agent.getValue();
@@ -97,13 +96,7 @@ public class Ex2 implements Runnable {
         ArrayList<CL_Pokemon> pokemons = Arena.json2Pokemons(pokemonsJ);
         arena.setPokemons(pokemons);
 
-//        for (CL_Pokemon oldP : persecutedList) {
-//            for (CL_Pokemon pokemon : pokemons) {
-//                if (pokemon.getLocation().x() == oldP.getLocation().x() && pokemon.getLocation().y() == oldP.getLocation().y() && oldP.getPersecutedBy() != -1) {
-//                    pokemon.setPersecutedBy(oldP.getPersecutedBy());
-//                }
-//            }
-//        }
+        //sent agents
         for (int i = 0; i < agentList.size(); i++) {
             CL_Agent agent = agentList.get(i);
             int id = agent.getID();
@@ -160,9 +153,14 @@ public class Ex2 implements Runnable {
         return g;
     }
 
+    /**
+     *
+     * @param g graph
+     * @param agent current agent
+     * @return next node on agent's path
+     */
     private static int getNextNode(directed_weighted_graph g, CL_Agent agent) {
         List<node_data> path = agent.getPath();
-        //TODO change to 1 if & write implementation in agent
         if (path != null && !path.isEmpty()) {
             node_data nextNode = path.remove(0);
             agent.setPath(path);
@@ -172,8 +170,24 @@ public class Ex2 implements Runnable {
         return -1;
     }
 
-    //todo check time left?
-    //TODO synchronize
+    /**
+     *Preparations: set pokemon's queue to each agent sorted by the hunt value( = time to get to the pokemon/ pokemon's value).
+     *      *  split to 4 cases:
+     *      *  1)pokemon has no pursuer and he is on no one else's path
+     *      *  2)pokemon has no pursuer and he is on someoneone else's path
+     *      *  3)pokemon do have a pursuer but current agent has better hunt value
+     *      *  4)pokemon do have a pursuer and pursuer's has better hunt value
+     *      *
+     *      *  to each case there is a different response:
+     *      *  1) sent agent to get pokemon
+     *      *  2)poll pokemon out of the queue and try again with the second best in queue
+     *      *  3)sent agent to get pokemon and find current pursuer to a new target(redo this algorithm for him)
+     *      *  4)poll pokemon out of the queue and try again with the second best in queue
+     *      *
+     *
+     * @param game  game_servies that holds game info
+     * @param agent agent that has no target
+     */
     private static synchronized void calculateAgentsPath(game_service game, CL_Agent agent) {
         //set graph
         directed_weighted_graph g = json2graph(game);
@@ -183,42 +197,12 @@ public class Ex2 implements Runnable {
         //set Pokemons and targetsMap
         updatePokemons(game, ga, agent);
 
-        //find target for idle agents
+        //set idle agents list
         List<CL_Agent> agents = arena.getAgents();
         LinkedList<CL_Agent> idleAgents = new LinkedList<>();
         idleAgents.add(agent);
 
-        //ToDelete
-        {
-            for (int i = 0; i < agents.size(); i++) {
-                CL_Agent agent1 = agents.get(i);
-                List<node_data> path1 = agent1.getPath();
-                for (int j = i + 1; j < agents.size(); j++) {
-                    CL_Agent agent2 = agents.get(j);
-                    List<node_data> path2 = agent2.getPath();
-                    if (!path1.isEmpty() && !path2.isEmpty()) {
-                        node_data target1 = path1.get(path1.size() - 1);
-                        node_data target2 = path2.get(path2.size() - 1);
-                        if (target1 == target2) {
-                            System.out.println("at " + game.timeToEnd() + ", " + agent1.getID() + " and " + agent2.getID() + " both went to " + target1.getKey());
-                        }
-                    }
-                }
-            }
-            ArrayList<Integer> targetsCheck = new ArrayList<>();
-            for (int i = 0; i < agents.size(); i++) {
-                targetsCheck.add(-1);
-            }
-
-            for (int i = 0; i < agents.size(); i++) {
-                List<node_data> path = agents.get(i).getPath();
-                if (path.size() > 0) {
-                    node_data node_data = path.get(path.size() - 1);
-                    targetsCheck.set(i, node_data.getKey());
-                }
-            }
-        }
-
+        //find new target to agents with no target
         while (!idleAgents.isEmpty()) {
             CL_Agent iAgent = idleAgents.removeFirst();
 
@@ -235,8 +219,9 @@ public class Ex2 implements Runnable {
                     if(agentHuntVal > agentsBestVal(pokemon, ga, iAgent.getID())){
                         //set new pursuer
                         updateHunt(pokemon, iAgent, agentHuntVal, ga);
+                    }else{
+                        idleAgents.add(iAgent);
                     }
-                    //here
                 } else {
                     //get pokemon's pursuer
                     CL_Agent pursuer = agents.get(pursuerID);
@@ -262,6 +247,11 @@ public class Ex2 implements Runnable {
         }
     }
 
+    /**
+     *
+     * @param pokemon curr pokemon
+     * @return the ID of the agents that pursue this pokemon
+     */
     private static int getPursuerID(CL_Pokemon pokemon){
         for(Map.Entry E: targetsMap.entrySet()){
             CL_Pokemon P = (CL_Pokemon) E.getKey();
@@ -272,7 +262,14 @@ public class Ex2 implements Runnable {
         return -1;
     }
 
-    //try to predict other agents next move
+    /**
+     * try to predict other agents next move
+     * in order to see if the pokemon is on someon else's path
+     *
+     * @param target target pokemon
+     * @param ga graph algorithm
+     * @return the best hunt value for this pokemon
+     */
     private static double agentsBestVal(CL_Pokemon target, dw_graph_algorithms ga, int currID){
         List<CL_Agent> agents = arena.getAgents();
 
@@ -281,9 +278,10 @@ public class Ex2 implements Runnable {
             if(agent.getID()!=currID){
                 List<node_data> path = agent.getPath();
                 if (!path.isEmpty()) {
-                    double nextPath = ga.shortestPathDist(path.get(path.size()-1).getKey(), target.get_edge().getSrc());
-                    double nextHuntValue = target.getValue() / (nextPath / agent.getSpeed());//huntValue = value/journey time
-                    nextHuntValue += agent.getHuntValue();
+                    double nextPathDist = ga.shortestPathDist(path.get(path.size()-1).getKey(), target.get_edge().getSrc()); //path from end of current path to target pokemon
+                    double nextHuntValue = target.getValue() / (nextPathDist / agent.getSpeed());//huntValue = value/journey time
+                    double pathLeftDist = ga.shortestPathDist(agent.getSrcNode(), target.get_edge().getSrc()); //path from agent location to end of current path
+                    nextHuntValue+= agent.get_curr_fruit().getValue() / (pathLeftDist / agent.getSpeed());// += curr huntValue
 
                     agentsBestVal = Math.max(nextHuntValue, agentsBestVal);
                 }
@@ -292,6 +290,12 @@ public class Ex2 implements Runnable {
         return agentsBestVal;
     }
 
+    /**
+     * update pokemons in targets map
+     * @param game game_service
+     * @param ga graph algorithm for operations
+     * @param agent current agent
+     */
     private static void updatePokemons(game_service game, dw_graph_algorithms ga, CL_Agent agent){
         //set pokemons
         String pokemonsString = game.getPokemons();
@@ -316,7 +320,13 @@ public class Ex2 implements Runnable {
         }
     }
 
-
+    /**
+     * sent agent after pokemon
+     * @param pokemon target
+     * @param agent current agent
+     * @param huntVal pokemons hunt value
+     * @param ga graph algorithms for operations
+     */
     private static void updateHunt(CL_Pokemon pokemon, CL_Agent agent, double huntVal, dw_graph_algorithms ga){
         //build path
         node_data dest = ga.getGraph().getNode(pokemon.get_edge().getDest());
@@ -328,7 +338,7 @@ public class Ex2 implements Runnable {
         agent.setPath(path2P);
         targetsMap.put(pokemon, agent.getID());
         agent.setHuntValue(huntVal);
-
+        agent.set_curr_fruit(pokemon);
     }
 
     //TODO finish this
@@ -392,6 +402,10 @@ public class Ex2 implements Runnable {
     //        }
     //    }
 
+    /**
+     * update what agent hunting what pokemon
+     * @param pokemons list of all pokemon
+     */
     private static void updateTargetsMap(List<CL_Pokemon> pokemons){
 
         List<CL_Pokemon> targets = new ArrayList<>();
@@ -433,9 +447,10 @@ public class Ex2 implements Runnable {
         }
     }
 
-    private static void setNewPanel(){
-
-    }
+    /**
+     * init game info to arena
+     * @param game game_service holds all game info
+     */
     private static void init(game_service game){
 
         String pokemonString = game.getPokemons();
@@ -444,16 +459,13 @@ public class Ex2 implements Runnable {
         arena = new Arena();
         arena.setGraph(g);
 
+        //set new panel
         gameWindow.setVisible(false);
         gameWindow.getContentPane().removeAll();
         GamePanel = new gamePanel(game);
         GamePanel.update(arena);
         gameWindow.getContentPane().add(GamePanel);
         gameWindow.setVisible(true);
-
-        //        if(!gameWindow.isLoggedIn())
-        //        arena.setPokemons(Arena.json2Pokemons(pokemonString));
-
 
         String info = game.toString();
         JSONObject line;
@@ -512,11 +524,8 @@ public class Ex2 implements Runnable {
                 CL_Pokemon startDest = pStartWith.get(j);
                 int nodeStart = startDest.getSrc();
                 game.addAgent(nodeStart);
-                //                game.addAgent(1); //toDelete
             }
 
-//            List<CL_Agent> agentList = arena.getAgents(game.getAgents(), g);
-//            arena.setAgents(agentList);
             arena.setPokemons(pokemons);
 
         } catch (JSONException e) {
@@ -525,25 +534,41 @@ public class Ex2 implements Runnable {
 
     }
 
+    /**
+     * start thread that runs game
+     */
     public static void startThread(){
         client = new Thread(new Ex2());
         client.start();
     }
 
+    /**
+     * @return user ID
+     */
     public static int getUserID() {
         return userID;
     }
 
+    /**
+     * @return game level
+     */
     public static int getScenario_num() {
         return scenario_num;
     }
 
+    /**
+     * set user ID
+     * @param userID user ID
+     */
     public static void setUserID(int userID) {
         Ex2.userID = userID;
     }
 
+    /**
+     * set level number
+     * @param scenario_num level number
+     */
     public static void setScenario_num(int scenario_num) {
         Ex2.scenario_num = scenario_num;
     }
 }
-

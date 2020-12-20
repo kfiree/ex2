@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * This class
+ * This class is the game panel. will contain all game graphics
  */
 public class gamePanel extends JPanel{
     private Arena arena;
@@ -25,11 +25,18 @@ public class gamePanel extends JPanel{
         this.game=game;
     }
 
+    /**
+     * update game arina and frame
+     * @param ar arena
+     */
     public void update(Arena ar) {
         this.arena = ar;
         updateFrame();
     }
 
+    /**
+     * update frame
+     */
     private void updateFrame() {
         Range rx = new Range(20,this.getWidth()-20);
         Range ry = new Range(this.getHeight()-10,150);
@@ -40,6 +47,10 @@ public class gamePanel extends JPanel{
 
     }
 
+    /**
+     * paint all graphics
+     * @param g Graphics
+     */
     public void paint(Graphics g) {
         g.setFont(new Font("MV Boli", Font.BOLD,15));
 
@@ -52,6 +63,10 @@ public class gamePanel extends JPanel{
         drawAgents(g);
     }
 
+    /**
+     * draw info
+     * @param g Graphics
+     */
     private void drawInfo(Graphics g) {
         java.util.List<String> str = arena.get_info();
         String dt = "none";
@@ -61,6 +76,10 @@ public class gamePanel extends JPanel{
 
     }
 
+    /**
+     * draw headline and progress bar and info on the side
+     * @param g Graphics
+     */
     private void drawProgressBarAndTitle(Graphics g){
         int currValue=0;
 
@@ -101,6 +120,10 @@ public class gamePanel extends JPanel{
         this.add(bar);
     }
 
+    /**
+     * draw nodes and edges of the graph
+     * @param g Graphics
+     */
     private void drawGraph(Graphics g) {
         directed_weighted_graph gg = arena.getGraph();
         Iterator<node_data> iter = gg.getV().iterator();
@@ -116,6 +139,11 @@ public class gamePanel extends JPanel{
             }
         }
     }
+
+    /**
+     * draw pokemons on the graph with different icon to different pokemon type
+     * @param g Graphics
+     */
     private void drawPokemons(Graphics g) {
         List<CL_Pokemon> pokemons = arena.getPokemons();
 
@@ -153,6 +181,10 @@ public class gamePanel extends JPanel{
         }
     }
 
+    /**
+     * draw agent on graph
+     * @param g Graphics
+     */
     private void drawAgents(Graphics g) {
         List<CL_Agent> agentsList = arena.getAgents();
         if(agentsList==null){
@@ -197,6 +229,13 @@ public class gamePanel extends JPanel{
             }
         }
     }
+
+    /**
+     * draw graph nodes
+     *
+     * @param n node
+     * @param g Graphics
+     */
     private void drawNode(node_data n, int r, Graphics g) {
         geo_location pos = n.getLocation();
         geo_location fp = this._w2f.world2frame(pos);
@@ -205,6 +244,12 @@ public class gamePanel extends JPanel{
         g.setColor(new Color(0x000000));
         g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-4*r);
     }
+
+    /**
+     * draw graph edges
+     * @param e edge
+     * @param g Graphics
+     */
     private void drawEdge(edge_data e, Graphics g) {
         Graphics2D g2D = (Graphics2D) g;
         directed_weighted_graph gg = arena.getGraph();
@@ -215,6 +260,5 @@ public class gamePanel extends JPanel{
         g2D.setColor(new Color(0x8D490E));
         g2D.setStroke(new BasicStroke(4));
         g2D.drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
-        //	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
     }
 }

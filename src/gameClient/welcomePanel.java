@@ -7,12 +7,18 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * this class is the entry panel
+ */
 public class welcomePanel extends JPanel  implements ActionListener {
     private JButton button;
     private JTextField ID_txtField;
     private JTextField lvl_txtField;
     private boolean alreadyDoneThat=false;
 
+    /**
+     * welcomePanel constructor
+     */
     public welcomePanel() {
         super();
         setBorder(BorderFactory.createLineBorder (Color.black));
@@ -20,58 +26,53 @@ public class welcomePanel extends JPanel  implements ActionListener {
 
     }
 
+    /**
+     * add to panel 2 text field (for level number and user ID)
+     * and a button to log in
+     */
     public void drawTextField(){
         this.setFont(new Font("MV Boli", Font.BOLD,15));
+
+        //login button
         button = new JButton ("Login");
         button.setBounds(375, 525, 200 , 50);
+        button.addActionListener(this);
 
+        //id text field
         ID_txtField = new JTextField ("id", 9);
         ID_txtField.addActionListener(this);
         ID_txtField.setBounds(200, 350, 250, 60);
-//        ID_txtField.setLocation(new Point(200, 350));
-//        ID_txtField.setPreferredSize(new Dimension(250, 60));
 
+        //level text field
         lvl_txtField = new JTextField ("lvl",3 );
         lvl_txtField.setBounds(550, 350, 250, 60);
         lvl_txtField.addActionListener(this);
-//        lvl_txtField.setLocation(new Point(550, 350));
-//        lvl_txtField.setPreferredSize(new Dimension(250, 60));
 
-
+        //instruction title
         JLabel ID_Title = new JLabel ("enter your ID to login to the game And choose level to play:");
         ID_Title.setBounds(200, 300, 200  ,50);
-//        ID_Title.setLocation(new Point(200, 300));
-//        ID_Title.setPreferredSize(new Dimension(200  ,50));
 
-//        JLabel lvlTitle = new JLabel ("choose what level you want to play 0-23:");
-//        lvlTitle.setBounds(550, 300,200  ,50 );
-//        lvlTitle.setLocation(new Point(550, 300));
-//        lvlTitle.setPreferredSize(new Dimension(200  ,50));
-
-        button.addActionListener(this);
-//        button.setLocation(new Point(1,1))
-//        button.setPreferredSize(new Dimension(25, 25);
-
+        //add elements to panel
         this.add(ID_Title);
-//        this.add(lvlTitle);
         this.add(ID_txtField);
         this.add(lvl_txtField);
         this.add(button);
 
-        button.addActionListener(this);
-
     }
 
-//    public game_service getGame() {
-//        return game;
-//    }
-
+    /**
+     * if button was pressed and user insert his id and level number then start game
+     * @param e action event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
+        //if button was pressed
         if(e.getSource() == button) {
+            //get text inputs
             String stringID = ID_txtField.getText();
             String stringLVL = lvl_txtField.getText();
 
+            //check if input is numbers
             try {
                 int lvl = Integer.parseInt(stringLVL);
                 int ID = Integer.parseInt(stringID);
@@ -81,18 +82,11 @@ public class welcomePanel extends JPanel  implements ActionListener {
                 System.out.println("Error. ID and level can only be numbers.");
             }
 
+            //if thread is not running =>start thread
             if(!alreadyDoneThat) {
                 Ex2.startThread();
                 alreadyDoneThat = true;
             }
         }
-        if(e.getSource() == ID_txtField && ID_txtField.getText()=="id"){
-            ID_txtField.setText("");
-        }
-
-        if(e.getSource() == lvl_txtField && lvl_txtField.getText()== "lvl"){
-            lvl_txtField.setText("");
-        }
     }
-
 }
