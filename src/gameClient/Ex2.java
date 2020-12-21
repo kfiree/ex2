@@ -26,6 +26,8 @@ public class Ex2 implements Runnable {
     private static HashMap<CL_Pokemon, Integer> targetsMap = new HashMap(); // HashMap<pokemon,purser.id>
 
     public static void main(String[] a) {
+        gameWindow = new window("Kfir&Tehila's Arena");
+        gameWindow.setSize(1000, 700);
 
         if(a.length == 0) {
             gameWindow = new window("Kfir&Tehila's Arena");

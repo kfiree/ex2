@@ -104,7 +104,7 @@ public class gamePanel extends JPanel{
         g.drawString("Level: "+ Ex2.getScenario_num(), 10, 40);
         g.drawString("Time left: " + secondsLeft +":"+milloSecodnsLeft , 10, 60);
 
-        ImageIcon headline = new ImageIcon("arena.png");
+        ImageIcon headline = new ImageIcon("./src/gameClient/Photos/arena.png");
         g.drawImage(headline.getImage(), (this.getWidth()/2)-200, 10, 400, 45, this);
 
         JProgressBar bar = new JProgressBar(0,totalValue);
@@ -148,8 +148,8 @@ public class gamePanel extends JPanel{
         List<CL_Pokemon> pokemons = arena.getPokemons();
 
         ImageIcon pokemonIcon;
-        ImageIcon yellowPokemon = new ImageIcon("pikachu.png");
-        ImageIcon greenPokemon = new ImageIcon("bulbasaur.png");
+        ImageIcon yellowPokemon = new ImageIcon("./src/gameClient/Photos/pikachu.png");
+        ImageIcon greenPokemon = new ImageIcon("./src/gameClient/Photos/bulbasaur.png");
 
         if(pokemons!=null) {
             Iterator<CL_Pokemon> itr = pokemons.iterator();
@@ -191,7 +191,7 @@ public class gamePanel extends JPanel{
             return;
         }
 
-        ImageIcon ashImg = new ImageIcon("ash.png");
+        ImageIcon ashImg = new ImageIcon("./src/gameClient/Photos/ash.png");
         g.setColor(Color.red);
 
         int agentsNum = agentsList.size();
