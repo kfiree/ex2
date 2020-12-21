@@ -9,7 +9,7 @@
 *for more reading- https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)*
 
 
-![](https://github.com/kfiree/ex2/blob/main/readmeGraph.PNG)
+![](https://github.com/kfiree/ex2/blob/main/src/wikiPhotos/readmeGraph.PNG)
 
 
 
@@ -20,7 +20,7 @@
 *The player can choose to play the game in 24 different levels of rising difficulty..*
 
 
-![](https://github.com/kfiree/ex2/blob/main/pokemon.PNG)
+![](https://github.com/kfiree/ex2/blob/main/src/wikiPhotos/pokemon.PNG)
 
   
 ### **Using:**
