@@ -9,9 +9,10 @@
 *for more reading- https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)*
 
 - *The second part of this project implements the **"pokemons game"**-*
-*the game based on unidirectional weighted graph and the pokemons scatterd on the graph edges randomly.*
-*the pokemons have different value. the main goal is to catch most pokemons with high value during the allotted time.*
-*The player can choose levels from 24 different game levels rising difficulty.*
+*The second part of this project implements the "pokemons game"- the game is based on an undirected weighted graph.*
+*In the game, the pokemons scatter on the graph edges randomly.*
+*Each pokemon has a different value, and the main goal is to catch as many pokemons as possible, while taking their value into consideration, during the allotted time.* 
+*The player can choose to play the game in 24 different levels of rising difficulty..*
 
   
 ### **Using:**

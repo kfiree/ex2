@@ -58,7 +58,7 @@ public class Ex2 implements Runnable {
         game.login(userID);
         game.startGame();
 
-        long sleepTime = 115;
+        long sleepTime = 100;
 
         while(game.isRunning()) {
 //            synchronized (Thread.currentThread()) {
